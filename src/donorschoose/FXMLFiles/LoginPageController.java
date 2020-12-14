@@ -27,10 +27,16 @@ public class LoginPageController implements Initializable {
 
 
     @FXML
-    private void login()
+    private void login() throws Exception
     {
         SQLite db = new SQLite();
-        db.searchUser(username.getText(), password.getText());
+        if (db.searchUser(username.getText(), password.getText()) == 1)
+        {
+            Parent homePage = FXMLLoader.load(getClass().getResource("homePage.fxml"));
+            Scene scene = new Scene(homePage);
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(scene);
+        }
     }
 
     @FXML

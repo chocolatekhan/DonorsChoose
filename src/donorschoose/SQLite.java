@@ -82,7 +82,7 @@ public class SQLite
         }
     }
     
-    public void addNewUser(String username, String password)
+    public int addNewUser(String username, String password)
     {
         String str = "INSERT INTO donor(username, password) VALUES (?, ?)";
         establishConnection();
@@ -93,16 +93,18 @@ public class SQLite
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             pstmt.executeUpdate();
+            closeConnection();
+            return 1;
         }
         catch (Exception e)
         {
             System.out.println(e);
+            closeConnection();
+            return 0;
         }
-        
-        closeConnection();
     }
     
-    public void searchUser(String username, String password)
+    public int searchUser(String username, String password)
     {
         establishConnection();
         
@@ -118,8 +120,10 @@ public class SQLite
                 boolean found = rs.getBoolean(1); // "found" column
                 if (found) {
                     System.out.println("YES");
+                    return 1;
                 } else {
                     System.out.println("NO");
+                    return 0;
                 }
             }
         }
@@ -130,5 +134,6 @@ public class SQLite
         }
         
         closeConnection();
+        return 0;
     }
 }

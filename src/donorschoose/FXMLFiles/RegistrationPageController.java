@@ -45,10 +45,16 @@ public class RegistrationPageController implements Initializable {
     }
 
     @FXML
-    private void register(ActionEvent event)
+    private void register(ActionEvent event) throws Exception
     {
         SQLite db = new SQLite();
-        db.addNewUser(username.getText(), password.getText());
+        if (db.addNewUser(username.getText(), password.getText()) == 1)
+        {
+            Parent homePage = FXMLLoader.load(getClass().getResource("homePage.fxml"));
+            Scene scene = new Scene(homePage);
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(scene);
+        }
     }
     
     /**
