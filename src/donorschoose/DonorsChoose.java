@@ -1,9 +1,14 @@
 package donorschoose;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 /**
  * Main class for program.
  */
-public class DonorsChoose
+public class DonorsChoose 
 {
     public static void main(String[] args)
     {

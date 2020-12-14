@@ -1,0 +1,47 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+
+}
+
+#donorschooseLabel
+{
+    -fx-font-size: 25px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: Verdana;
+}
+
+.root
+{
+    -fx-background-color: #67BBE3;
+}
+
+#homepageButton
+{
+    -fx-background-color: #7DC8EC;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 15px;
+    -fx-font-family: Verdana;
+}
+
+.button
+{
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #67BBE3;
+    -fx-font-size: 15px;
+    -fx-font-family: Verdana;
+}
+
+.button:hover
+{
+    -fx-background-color: #7DC8EC;
+}
+
+#searchLabel
+{
+    -fx-text-fill: #1E6587;
+    -fx-font-size: 15px;
+}
+
