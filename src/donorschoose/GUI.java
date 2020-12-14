@@ -22,7 +22,7 @@ public class GUI extends Application
     public void start(Stage primaryStage) throws Exception
     {
         
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLFiles/FXML.fxml"));   // load FXML file
+        Parent root = FXMLLoader.load(getClass().getResource("FXMLFiles/homePage.fxml"));   // load FXML file
         Scene scene = new Scene(root);          // create a scene using the FXML file
         
         primaryStage.setTitle("Donors Choose"); // title of the window being created
