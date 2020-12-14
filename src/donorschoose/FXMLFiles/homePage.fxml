@@ -7,21 +7,20 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="donorschoose.FXMLFiles.HomePageController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="donorschoose.FXMLFiles.HomePageController">
     <stylesheets>
         <URL value="@homepage.css" />
     </stylesheets>
    <children>
       <Label fx:id="donorschooseLabel" layoutX="14.0" layoutY="7.0" prefHeight="32.0" prefWidth="197.0" text="Donors Choose" />
-      <TextArea fx:id="searchBar" layoutX="146.0" layoutY="67.0" prefHeight="37.0" prefWidth="308.0" />
-      <Label fx:id="searchLabel" layoutX="81.0" layoutY="71.0" prefHeight="29.0" prefWidth="47.0" text="Search" />
+      <TextArea fx:id="searchBar" layoutX="91.0" layoutY="69.0" prefHeight="37.0" prefWidth="458.0" />
       <Button fx:id="homepageButton" layoutX="345.0" layoutY="9.0" mnemonicParsing="false" text="Home Page" />
       <Button fx:id="profileButton" layoutX="452.0" layoutY="9.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="70.0" text="Profile" />
       <Button fx:id="logoutButton" layoutX="520.0" layoutY="9.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="80.0" text="Log Out" />
       <Button layoutX="3.0" layoutY="135.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="118.0" text="Clothing" />
       <Button layoutX="3.0" layoutY="172.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="118.0" text="Food" />
       <Button layoutX="3.0" layoutY="209.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="118.0" text="Books" />
-      <Rectangle fx:id="activityBox" arcHeight="5.0" arcWidth="5.0" fill="#80dbff" height="215.0" layoutX="122.0" layoutY="144.0" stroke="WHITE" strokeType="INSIDE" width="356.0" />
-      <Label layoutX="271.0" layoutY="154.0" prefHeight="17.0" prefWidth="57.0" text="Activity" />
+      <Rectangle fx:id="activityBox" arcHeight="5.0" arcWidth="5.0" fill="#80dbff" height="124.0" layoutX="122.0" layoutY="144.0" stroke="WHITE" strokeType="INSIDE" width="177.0" />
+      <Label layoutX="181.0" layoutY="145.0" prefHeight="17.0" prefWidth="57.0" text="Activity" />
    </children>
 </AnchorPane>
