@@ -12,9 +12,12 @@ public class DonorsChoose
         DatabaseSync dbSync = new DatabaseSync();   // new dropbox sync object
         dbSync.connectServer();                     // use object to connect
         dbSync.downloadDB();                        // download .db file
+        */
         
         SQLite db = new SQLite();                   // new SQLite object to connect to database
         db.establishConnection();                   // connect to database
+        
+        /*
         db.executeQuery("SELECT * FROM charity");   // query
         //db.executeUpdate("INSERT INTO charity VALUES (3, 'new')");    // command
         db.executeQuery("SELECT * FROM charity");   // query
@@ -26,5 +29,7 @@ public class DonorsChoose
         
         GUI app = new GUI();                        // new graphical interface object
         app.launchApp();                            // user GUI object to launch graphical interface
+
+        db.closeConnection();
     }
 }

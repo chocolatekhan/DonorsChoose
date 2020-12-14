@@ -27,6 +27,21 @@ public class SQLite
     }
     
     /**
+     * Close connection to database. IMPORTANT.
+     */
+    public void closeConnection()
+    {
+        try
+        {
+            if (conn != null)   conn.close();       // if the connection is not already closed, close it
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+    
+    /**
      * Execute queries (not insertions).
      * @param str query to execute
      */
@@ -67,18 +82,53 @@ public class SQLite
         }
     }
     
-    /**
-     * Close connection to database. IMPORTANT.
-     */
-    public void closeConnection()
+    public void addNewUser(String username, String password)
     {
+        String str = "INSERT INTO donor(username, password) VALUES (?, ?)";
+        establishConnection();
+        
         try
         {
-            if (conn != null)   conn.close();       // if the connection is not already closed, close it
+            PreparedStatement pstmt = conn.prepareStatement(str);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.executeUpdate();
         }
         catch (Exception e)
         {
             System.out.println(e);
         }
+        
+        closeConnection();
+    }
+    
+    public void searchUser(String username, String password)
+    {
+        establishConnection();
+        
+        try
+        {
+            String query = "SELECT (count(*) > 0) as found FROM donor WHERE username = ? AND password = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                boolean found = rs.getBoolean(1); // "found" column
+                if (found) {
+                    System.out.println("YES");
+                } else {
+                    System.out.println("NO");
+                }
+            }
+        }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
+        
+        closeConnection();
     }
 }

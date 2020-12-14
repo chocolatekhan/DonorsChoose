@@ -8,17 +8,17 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="donorschoose.FXMLFiles.RegistrationPageController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="donorschoose.FXMLFiles.RegistrationPageController">
     <stylesheets>
         <URL value="@registrationpage.css" />
     </stylesheets>
    <children>
-      <TextField layoutX="198.0" layoutY="103.0" promptText="Username">
+      <TextField fx:id="username" layoutX="198.0" layoutY="103.0" promptText="Username">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <PasswordField layoutX="198.0" layoutY="158.0" promptText="Password">
+      <PasswordField fx:id="password" layoutX="198.0" layoutY="158.0" promptText="Password">
          <font>
             <Font size="18.0" />
          </font>

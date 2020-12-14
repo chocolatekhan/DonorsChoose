@@ -5,6 +5,7 @@
  */
 package donorschoose.FXMLFiles;
 
+import donorschoose.SQLite;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -14,6 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
@@ -27,6 +30,10 @@ public class RegistrationPageController implements Initializable {
     private Button loginButton;
     @FXML
     private Button registerButton;    
+    @FXML
+    private TextField username;
+    @FXML
+    private PasswordField password;
 
     @FXML
     private void loadLoginPage(ActionEvent event) throws Exception
@@ -40,7 +47,8 @@ public class RegistrationPageController implements Initializable {
     @FXML
     private void register(ActionEvent event)
     {
-        
+        SQLite db = new SQLite();
+        db.addNewUser(username.getText(), password.getText());
     }
     
     /**
