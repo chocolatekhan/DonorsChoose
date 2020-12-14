@@ -22,14 +22,15 @@ public class GUI extends Application
     public void start(Stage primaryStage) throws Exception
     {
         
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLFiles/FXML.fxml"));   // load FXML file
-        Scene scene = new Scene(root);          // create a scene using the FXML file
+        Parent root = FXMLLoader.load(getClass().getResource("FXMLFiles/loginPage.fxml"));      // load FXML file
+        Scene scene = new Scene(root);                                                          // create a scene using the FXML file
         
-        primaryStage.setTitle("Donors Choose"); // title of the window being created
-        // TODO maybe we should hide the window decorations and make the thing full screen? Look into if this can be done properly.
+        primaryStage.setTitle("Donors Choose");                                                 // title of the window being created
+                                                                                                // TODO maybe we should hide the window decorations
+                                                                                                // and make the thing full screen? Look into if this can be done properly.
         
-        primaryStage.setScene(scene);           // set the scene to the window being created
-        primaryStage.show();                    // show the window
+        primaryStage.setScene(scene);                                                           // set the scene to the window being created
+        primaryStage.show();                                                                    // show the window
     }
     
     /**
