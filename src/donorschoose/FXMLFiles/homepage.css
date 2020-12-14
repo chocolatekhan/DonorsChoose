@@ -45,3 +45,7 @@
     -fx-font-size: 15px;
 }
 
+#activityBox
+{
+    -fx-background-color: #7FCFF5;
+}
