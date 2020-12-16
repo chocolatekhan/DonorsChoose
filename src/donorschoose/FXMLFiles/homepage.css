@@ -10,12 +10,12 @@
 {
     -fx-font-size: 25px;
     -fx-text-fill: #FFFFFF;
-    -fx-font-family: Verdana;
+    -fx-font-family: 'Verdana';
 }
 
 .root
 {
-    -fx-background-color: #67BBE3;
+    -fx-background-color: #FFFFFF;
 }
 
 #homepageButton
@@ -23,7 +23,7 @@
     -fx-background-color: #7DC8EC;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 15px;
-    -fx-font-family: Verdana;
+    -fx-font-family: 'Verdana';
 }
 
 .button
@@ -31,7 +31,7 @@
     -fx-text-fill: #FFFFFF;
     -fx-background-color: #67BBE3;
     -fx-font-size: 15px;
-    -fx-font-family: Verdana;
+    -fx-font-family: 'Verdana';
 }
 
 .button:hover
@@ -49,3 +49,19 @@
 {
     -fx-background-color: #7FCFF5;
 }
+
+#toolbar
+{
+    -fx-background-color: #67BBE3;
+}
+
+#verticalToolbar
+{
+    -fx-background-color: #FFFFFF;
+}
+
+#grid
+{
+     -fx-background-color: #F5FDFF;
+}
+
