@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -24,6 +25,8 @@ public class LoginPageController implements Initializable {
     private TextField username;
     @FXML
     private PasswordField password;
+    @FXML
+    private Label errorLabel;
 
 
     @FXML
@@ -36,6 +39,10 @@ public class LoginPageController implements Initializable {
             Scene scene = new Scene(homePage);
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(scene);
+        }
+        else if (db.searchUser(username.getText(), password.getText()) == 0)
+        {
+            errorLabel.setVisible(true);
         }
     }
 
@@ -57,3 +64,5 @@ public class LoginPageController implements Initializable {
     } 
     
 }
+
+ 

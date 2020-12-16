@@ -23,17 +23,17 @@
             <Font size="18.0" />
          </font>
       </PasswordField>
-      <Button fx:id="loginButton" layoutX="490.0" layoutY="356.0" mnemonicParsing="false" onAction="#loadLoginPage" styleClass="primaryButton" text="Login">
+      <Button fx:id="loginButton" layoutX="487.0" layoutY="345.0" mnemonicParsing="false" onAction="#loadLoginPage" prefHeight="33.0" prefWidth="69.0" styleClass="primaryButton" text="Login">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Label layoutX="458.0" layoutY="331.0" text="Already registered?">
+      <Label layoutX="462.0" layoutY="316.0" text="Already registered?">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="registerButton" layoutX="255.0" layoutY="230.0" mnemonicParsing="false" onAction="#register" prefHeight="39.0" prefWidth="89.0" styleClass="secondaryButton" text="Register">
+      <Button fx:id="registerButton" layoutX="248.0" layoutY="230.0" mnemonicParsing="false" onAction="#register" prefHeight="39.0" prefWidth="104.0" styleClass="secondaryButton" text="Register">
          <font>
             <Font size="18.0" />
          </font>

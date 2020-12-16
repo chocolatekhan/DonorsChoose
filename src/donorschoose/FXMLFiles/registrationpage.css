@@ -5,3 +5,19 @@
 .mainFxmlClass {
 
 }
+
+.root
+{
+    -fx-background-color: #D7EBF0;
+}
+
+.button
+{
+    -fx-background-color: #90D7E9;
+    -fx-text-fill: #165C6E;
+}
+
+.button:hover
+{
+    -fx-background-color: #B0DDE9;
+}

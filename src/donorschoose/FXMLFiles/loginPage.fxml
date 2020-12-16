@@ -23,12 +23,12 @@
             <Font size="18.0" />
          </font>
       </PasswordField>
-      <Button fx:id="registerButton" layoutX="472.0" layoutY="348.0" mnemonicParsing="false" onAction="#loadRegistrationPage" styleClass="primaryButton" text="Register">
+      <Button fx:id="registerButton" layoutX="469.0" layoutY="340.0" mnemonicParsing="false" onAction="#loadRegistrationPage" prefHeight="30.0" prefWidth="76.0" styleClass="primaryButton" text="Register">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Label layoutX="459.0" layoutY="320.0" text="Not registered?">
+      <Label layoutX="459.0" layoutY="311.0" text="Not registered?">
          <font>
             <Font size="14.0" />
          </font>
@@ -38,5 +38,6 @@
             <Font size="18.0" />
          </font>
       </Button>
+      <Label fx:id="errorLabel" layoutX="191.0" layoutY="268.0" prefHeight="30.0" prefWidth="217.0" text="Incorrect username or password!" visible="false" />
    </children>
 </AnchorPane>
