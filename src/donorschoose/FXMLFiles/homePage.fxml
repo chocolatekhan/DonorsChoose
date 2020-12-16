@@ -16,7 +16,7 @@
       <TextArea fx:id="searchBar" layoutX="91.0" layoutY="69.0" prefHeight="37.0" prefWidth="458.0" />
       <Button fx:id="homepageButton" layoutX="345.0" layoutY="9.0" mnemonicParsing="false" text="Home Page" />
       <Button fx:id="profileButton" layoutX="452.0" layoutY="9.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="70.0" text="Profile" />
-      <Button fx:id="logoutButton" layoutX="520.0" layoutY="9.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="80.0" text="Log Out" />
+      <Button fx:id="logoutButton" layoutX="520.0" layoutY="9.0" mnemonicParsing="false" onAction="#logout" prefHeight="29.0" prefWidth="80.0" text="Log Out" />
       <Button layoutX="3.0" layoutY="135.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="118.0" text="Clothing" />
       <Button layoutX="3.0" layoutY="172.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="118.0" text="Food" />
       <Button layoutX="3.0" layoutY="209.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="118.0" text="Books" />

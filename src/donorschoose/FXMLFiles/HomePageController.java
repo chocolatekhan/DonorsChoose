@@ -8,10 +8,14 @@ package donorschoose.FXMLFiles;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -32,6 +36,14 @@ public class HomePageController implements Initializable {
     private Button profileButton;
     @FXML
     private Button logoutButton;
+    
+    public void logout() throws Exception
+    {
+        Parent loginPage = FXMLLoader.load(getClass().getResource("loginPage.fxml"));
+        Scene scene = new Scene(loginPage);
+        Stage stage = (Stage) logoutButton.getScene().getWindow();
+        stage.setScene(scene);
+    }
 
     /**
      * Initializes the controller class.
