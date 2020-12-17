@@ -63,7 +63,26 @@ public class SQLite
         }
     }
     
-    // TODO the function above needs to be changed. We actually have to use prepared statements which we will pass to a private function to execute.
+    public ResultSet searchCharity(String str)
+    {
+        String query = "SELECT name, description FROM charity WHERE (name LIKE '%' || ? || '%') OR (tags LIKE '%' || ? ||'%')";
+        establishConnection();
+        
+        try
+        {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, str);
+            pstmt.setString(2, str);
+            ResultSet results = pstmt.executeQuery();
+            return results;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+            ResultSet results = null;
+            return results;
+        }
+    }
     
     /**
      * Execute insertions and updates (not searches).
@@ -118,13 +137,8 @@ public class SQLite
             try (ResultSet rs = pstmt.executeQuery()) {
             if (rs.next()) {
                 boolean found = rs.getBoolean(1); // "found" column
-                if (found) {
-                    System.out.println("YES");
-                    return 1;
-                } else {
-                    System.out.println("NO");
-                    return 0;
-                }
+                if (found)  { return 1; }
+                else        { return 0; }
             }
         }
         }
