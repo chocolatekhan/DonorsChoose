@@ -13,30 +13,31 @@
         <URL value="@registrationpage.css" />
     </stylesheets>
    <children>
-      <TextField fx:id="username" layoutX="198.0" layoutY="103.0" promptText="Username">
+      <TextField fx:id="username" layoutX="188.0" layoutY="93.0" prefHeight="39.0" prefWidth="230.0" promptText="Username">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <PasswordField fx:id="password" layoutX="198.0" layoutY="158.0" promptText="Password">
+      <PasswordField fx:id="password" layoutX="188.0" layoutY="148.0" prefHeight="39.0" prefWidth="230.0" promptText="Password">
          <font>
             <Font size="18.0" />
          </font>
       </PasswordField>
-      <Button fx:id="loginButton" layoutX="487.0" layoutY="345.0" mnemonicParsing="false" onAction="#loadLoginPage" prefHeight="33.0" prefWidth="69.0" styleClass="primaryButton" text="Login">
+      <Button fx:id="loginButton" layoutX="472.0" layoutY="334.0" mnemonicParsing="false" onAction="#loadLoginPage" prefHeight="33.0" prefWidth="69.0" styleClass="primaryButton" text="Login">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Label layoutX="462.0" layoutY="316.0" text="Already registered?">
+      <Label layoutX="447.0" layoutY="304.0" text="Already registered?">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="registerButton" layoutX="248.0" layoutY="230.0" mnemonicParsing="false" onAction="#register" prefHeight="39.0" prefWidth="104.0" styleClass="secondaryButton" text="Register">
+      <Button fx:id="registerButton" layoutX="248.0" layoutY="221.0" mnemonicParsing="false" onAction="#register" prefHeight="39.0" prefWidth="104.0" styleClass="secondaryButton" text="Register">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
+      <Label fx:id="errorLabel" layoutX="216.0" layoutY="283.0" prefHeight="21.0" prefWidth="167.0" text="Username already exists!" visible="false" />
    </children>
 </AnchorPane>

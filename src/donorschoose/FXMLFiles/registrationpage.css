@@ -21,3 +21,9 @@
 {
     -fx-background-color: #B0DDE9;
 }
+
+#errorLabel
+{
+    -fx-font-size: 15px;
+    -fx-text-fill: #BF4E5F;
+}
