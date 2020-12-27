@@ -46,7 +46,8 @@
             android:layout_width="153dp"
             android:layout_height="wrap_content"
             android:onClick="login"
-            android:text="Login" />
+            android:text="Login"
+            android:textColor="#FFFFFF" />
 
         <Space
             android:layout_width="match_parent"
@@ -67,6 +68,7 @@
             android:layout_width="153dp"
             android:layout_height="wrap_content"
             android:onClick="goRegister"
-            android:text="Register" />
+            android:text="Register"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
