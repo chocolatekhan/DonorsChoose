@@ -4,51 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context=".Home">
 
-    <TableLayout
+    <TableRow
+        android:id="@+id/tableRow"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10px"
-        tools:layout_editor_absoluteX="204dp"
-        tools:layout_editor_absoluteY="265dp">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="20dp">
 
-        <TableRow
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="100"
+            android:fontFamily="sans-serif-medium"
+            android:padding="5dp"
+            android:text="Donors Choose"
+            android:textColor="#1C1A1A"
+            android:textSize="24sp"
+            android:typeface="sans" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            style="@style/Widget.AppCompat.ImageButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center|center_vertical"
+            android:layout_weight="1"
+            android:onClick="logout"
+            android:tint="#FF0000"
+            app:srcCompat="@android:drawable/ic_lock_power_off" />
+    </TableRow>
+
+    <SearchView
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableRow"
+        app:searchIcon="@null" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchBar">
+
+        <LinearLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:isScrollContainer="false"
+            android:orientation="vertical"
+            android:paddingTop="10dp">
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="220dp"
-                android:layout_height="match_parent"
-                android:text="Donors Chose"
-                android:textSize="24sp" />
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:onClick="logout"
-                app:srcCompat="@android:drawable/ic_lock_power_off" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <SearchView
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_span="2" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </TableLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
