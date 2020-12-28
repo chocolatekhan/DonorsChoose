@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Dc</string>
+    <string name="donors_choose_title">Donors\' Choose</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="not_mem">Not a member?</string>
+    <string name="alreadymem">Already a member?</string>
+    <string name="regis">Register</string>
+    <string name="login">Login</string>
+    <string name="namhint"> Username</string>
+    <string name="mailhint"> Email</string>
+    <string name="passwordreg"> Password(Numbers)</string>
+    <string name="confpassword">Phone Number</string>
+
+</resources>
