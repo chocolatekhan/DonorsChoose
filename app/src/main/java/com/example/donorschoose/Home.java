@@ -46,6 +46,13 @@ public class Home extends AppCompatActivity
     SearchView searchBar;
     LinearLayout relativeLayout;
 
+    private void loadCharity(String charityName)
+    {
+        Intent charityProfile = new Intent(this, CharityProfile.class);
+        charityProfile.putExtra("Charity Name", charityName);
+        startActivity(charityProfile);
+    }
+
 
     private void addCard(QueryDocumentSnapshot document)
     {
@@ -79,6 +86,12 @@ public class Home extends AppCompatActivity
         description.setTextColor(Color.WHITE);
         description.setPadding(20,10,10,10);
         description.setGravity(Gravity.LEFT);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                loadCharity(name.getText().toString());
+            }
+        });
 
         LinearLayout linearLayout = new LinearLayout(getApplicationContext());
         linearLayout.setOrientation(LinearLayout.VERTICAL);

@@ -26,7 +26,9 @@ public class CharityProfile extends AppCompatActivity {
         setContentView(R.layout.activity_charity_profile);
 
         db = FirebaseFirestore.getInstance();
-        retrieveCharityData("BRAC");
+
+        Bundle extras = getIntent().getExtras();
+        retrieveCharityData(extras.getString("Charity Name"));
     }
 
     public void retrieveCharityData(String name)
