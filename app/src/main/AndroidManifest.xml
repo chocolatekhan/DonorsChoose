@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DonorsChoose">
+        <activity android:name=".NonMonetaryDonation"></activity>
+        <activity android:name=".Donate" />
         <activity android:name=".CharityProfile">
 
         </activity>
@@ -20,9 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Registration" />
-        <activity android:name=".Login">
-
-        </activity>
+        <activity android:name=".Login" />
     </application>
 
 </manifest>

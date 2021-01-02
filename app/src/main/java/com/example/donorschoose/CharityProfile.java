@@ -3,7 +3,11 @@ package com.example.donorschoose;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,4 +67,12 @@ public class CharityProfile extends AppCompatActivity {
         nameTextView.setText(charityName + "");
         descriptionTextView.setText(charityDescription + "");
     }
+
+    public void donateOnClick(View view)
+    {
+        Intent intent = new Intent(getApplicationContext(), Donate.class);
+        startActivity(intent);
+    }
+
+
 }
