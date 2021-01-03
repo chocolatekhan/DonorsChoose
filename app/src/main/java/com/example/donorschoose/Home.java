@@ -7,14 +7,21 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -22,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +38,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -53,8 +71,7 @@ public class Home extends AppCompatActivity
         startActivity(charityProfile);
     }
 
-
-    private void addCard(QueryDocumentSnapshot document)
+    private CardView createCard()
     {
         CardView cardView = new CardView(getApplicationContext());
         LinearLayout.LayoutParams cardViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -62,30 +79,73 @@ public class Home extends AppCompatActivity
         cardView.setLayoutParams(cardViewLayout);
         cardView.setRadius(15);
         cardView.setContentPadding(0, 300, 0, 0);
-        cardView.setCardBackgroundColor(Color.rgb(102, 217, 238));
         cardView.setMaxCardElevation(30);
         cardView.setMaxCardElevation(6);
+        cardView.setCardBackgroundColor(Color.rgb(102, 217, 238));
 
+        return cardView;
+    }
+
+    private TextView createName(String nameString)
+    {
         TextView name = new TextView(getApplicationContext());
         name.setBackgroundColor(Color.BLACK);
-        name.getBackground().setAlpha(100);
+        name.getBackground().setAlpha(150);
         name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        name.setText(document.getString("name"));
+        name.setText(nameString);
         name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         name.setTextColor(Color.WHITE);
         name.setPadding(20,10,10,10);
         name.setGravity(Gravity.LEFT);
+        return name;
+    }
 
-
+    private TextView createDescription(String descriptionString)
+    {
         TextView description = new TextView(getApplicationContext());
         description.setBackgroundColor(Color.BLACK);
-        description.getBackground().setAlpha(100);
+        description.getBackground().setAlpha(150);
         description.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        description.setText(document.getString("description"));
+        description.setText(descriptionString);
         description.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         description.setTextColor(Color.WHITE);
         description.setPadding(20,10,10,10);
         description.setGravity(Gravity.LEFT);
+        return description;
+    }
+
+    private CardView addBackground(CardView cardView, LinearLayout linearLayout, String downloadUrl)
+    {
+        if (!downloadUrl.isEmpty())
+        {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(downloadUrl);
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(getApplicationContext()).load(uri.toString())
+                            .resize(cardView.getWidth(), linearLayout.getHeight() + 300).into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            cardView.setBackground(new BitmapDrawable(getResources(), bitmap));
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {}
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                    });
+            }});
+        }
+        return cardView;
+    }
+
+    private void addCard(QueryDocumentSnapshot document)
+    {
+        CardView cardView = createCard();
+        TextView name = createName(document.getString("name"));
+        TextView description = createDescription(document.getString("description"));
+
 
         cardView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -97,6 +157,8 @@ public class Home extends AppCompatActivity
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.addView(name);
         linearLayout.addView(description);
+
+        cardView = addBackground(cardView, linearLayout, document.getString("background"));
         cardView.addView(linearLayout);
         relativeLayout.addView(cardView);
     }
