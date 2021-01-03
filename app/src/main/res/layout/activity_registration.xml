@@ -4,74 +4,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context=".Registration">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="192dp"
-        tools:layout_editor_absoluteY="184dp">
+        android:orientation="vertical">
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="206dp" />
-
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:editable="false"
-            android:ems="10"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:layout_weight="3" />
 
-        <Space
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="17dp" />
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <Space
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:editable="false"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/registerButton"
+                android:layout_width="153dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:onClick="register"
+                android:text="Register"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="37dp" />
-
-        <Button
-            android:id="@+id/registerButton"
-            android:layout_width="153dp"
             android:layout_height="wrap_content"
-            android:onClick="register"
-            android:text="Register"
-            android:textColor="#FFFFFF" />
+            android:layout_weight="0.5"
+            android:orientation="vertical">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="112dp" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Already registered?" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Already registered?" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
-
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="153dp"
-            android:layout_height="wrap_content"
-            android:onClick="goLogin"
-            android:text="Login"
-            android:textColor="#FFFFFF" />
-
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="153dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="20dp"
+                android:onClick="goLogin"
+                android:text="Login"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
