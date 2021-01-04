@@ -64,10 +64,11 @@ public class Home extends AppCompatActivity
     SearchView searchBar;
     LinearLayout relativeLayout;
 
-    private void loadCharity(String charityName)
+    private void loadCharity(String charityID)
     {
         Intent charityProfile = new Intent(this, CharityProfile.class);
-        charityProfile.putExtra("Charity Name", charityName);
+        charityProfile.putExtra("Charity ID", charityID);
+        charityProfile.putExtra("Access Level", "View");
         startActivity(charityProfile);
     }
 
@@ -149,7 +150,7 @@ public class Home extends AppCompatActivity
 
         cardView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                loadCharity(name.getText().toString());
+                loadCharity(document.getId());
             }
         });
 

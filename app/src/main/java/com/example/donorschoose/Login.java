@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,6 +28,13 @@ public class Login extends AppCompatActivity
     private FirebaseFirestore db;
 
     public void goHome() { startActivity(new Intent(this, Home.class)); }
+    public void goCharity(String charityID)
+    {
+        Intent charityProfile = new Intent(this, CharityProfile.class);
+        charityProfile.putExtra("Charity ID", charityID);
+        charityProfile.putExtra("Access Level", "Edit");
+        startActivity(charityProfile);
+    }
     public void goRegister(View view) { startActivity((new Intent(this, Registration.class)).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)); }
 
     public void login(View view)
@@ -42,15 +50,14 @@ public class Login extends AppCompatActivity
                 if (task.isSuccessful())
                 {
                     String userID = mAuth.getCurrentUser().getUid();
-                    DocumentReference documentReference = db.collection("users").document(userID);
-                    documentReference.addSnapshotListener(Login.this, new EventListener<DocumentSnapshot>()
+                    db.collection("users").document(userID).addSnapshotListener(Login.this, new EventListener<DocumentSnapshot>()
                     {
                         @Override
                         public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error)
                         {
                             String userType = documentSnapshot.getString("type");
-                            if (userType.equals("donor")) goHome();
-                            else    Toast.makeText(Login.this, userType, Toast.LENGTH_SHORT).show();
+                            if (userType.equals("donor"))           goHome();
+                            else if (userType.equals("charity"))    goCharity(documentSnapshot.getId());
                         }
                     });
                 }
