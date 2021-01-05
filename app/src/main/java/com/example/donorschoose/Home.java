@@ -64,6 +64,8 @@ public class Home extends AppCompatActivity
     SearchView searchBar;
     LinearLayout relativeLayout;
 
+    public void loadUser(View view) { startActivity(new Intent(this, UserProfile.class)); }
+
     private void loadCharity(String charityID)
     {
         Intent charityProfile = new Intent(this, CharityProfile.class);
