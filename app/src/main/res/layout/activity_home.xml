@@ -11,6 +11,7 @@
         android:id="@+id/tableRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#F7F9FA"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="20dp">
 

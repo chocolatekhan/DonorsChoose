@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/aldrich</item>
+        <item>@font/cantarell</item>
+        <item>@font/gabriela</item>
+        <item>@font/quicksand_medium</item>
+        <item>@font/salsa</item>
+        <item>@font/ubuntu_light</item>
+    </array>
+</resources>
