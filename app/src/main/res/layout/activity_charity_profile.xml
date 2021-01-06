@@ -6,6 +6,52 @@
     android:layout_height="match_parent"
     tools:context=".CharityProfile">
 
+    <TableRow
+        android:id="@+id/tableRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F7F9FA"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="20dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="100"
+            android:fontFamily="@font/coda"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="Donors Choose"
+            android:textColor="#228CAA"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:foreground="@drawable/ic_launcher_foreground"
+            android:onClick="loadUser"
+            tools:background="#1A0F0F0F" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            style="@style/Widget.AppCompat.ImageButton"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|center_vertical"
+            android:layout_weight="1"
+            android:background="#6BD2EDF1"
+            android:onClick="logout"
+            android:tint="#101010"
+            app:srcCompat="@android:drawable/ic_lock_power_off" />
+    </TableRow>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
@@ -15,7 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -51,11 +97,15 @@
 
     <Button
         android:id="@+id/donateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="171dp"
+        android:layout_height="59dp"
+        android:fontFamily="@font/salsa"
         android:onClick="buttonHandler"
         android:text="Donate"
         android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="#69CAED"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

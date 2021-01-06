@@ -7,31 +7,60 @@
     android:padding="20dp"
     tools:context=".Donate">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+    <TableRow
+        android:id="@+id/tableRow"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Donation Information"
-        android:textColor="#100F0F"
-        android:textSize="25sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="#F7F9FA"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="20dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="100"
+            android:fontFamily="@font/coda"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="Donors Choose"
+            android:textColor="#228CAA"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:foreground="@drawable/ic_launcher_foreground"
+            android:onClick="loadUser"
+            tools:background="#1A0F0F0F" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            style="@style/Widget.AppCompat.ImageButton"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|center_vertical"
+            android:layout_weight="1"
+            android:background="#6BD2EDF1"
+            android:onClick="logout"
+            android:tint="#101010"
+            app:srcCompat="@android:drawable/ic_lock_power_off" />
+    </TableRow>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintVertical_bias="0.071"
         tools:layout_editor_absoluteX="20dp">
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="How much would you like to donate?"
-            android:textAlignment="center"
-            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/donationAmount"
@@ -46,22 +75,43 @@
         <Button
             android:id="@+id/button"
             android:layout_width="200dp"
-            android:layout_height="63dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
+            android:fontFamily="@font/salsa"
             android:onClick="donate"
-            android:text="Donate Now"
-            android:textColor="#FFFFFF" />
+            android:text="Make Payment"
+            android:textColor="#F3F5F6"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:backgroundTint="#69CAED" />
 
         <Button
             android:id="@+id/nonmonetaryButton"
             android:layout_width="200dp"
-            android:layout_height="72dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/salsa"
             android:onClick="nonmonetaryOnClick"
             android:text="Non-monetary\nDonation"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:backgroundTint="#69CAED" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="152dp"
+        android:fontFamily="@font/quicksand_medium"
+        android:text="How much would you like to donate?"
+        android:textAlignment="center"
+        android:textColor="#0B0B0B"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
