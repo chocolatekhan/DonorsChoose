@@ -33,6 +33,15 @@ public class Donate extends AppCompatActivity {
     String charityID;
     static String charityName;
 
+    public void loadUser(View view) { startActivity(new Intent(this, UserProfile.class)); }
+    public void goHome(View view) { startActivity(new Intent(this, Home.class)); }
+
+    public void logout(View view)
+    {
+        FirebaseAuth.getInstance().signOut();
+        startActivity((new Intent(this, Login.class)).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

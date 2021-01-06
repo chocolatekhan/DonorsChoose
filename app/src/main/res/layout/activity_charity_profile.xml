@@ -10,9 +10,12 @@
         android:id="@+id/tableRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F7F9FA"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="20dp">
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView2"
@@ -25,28 +28,42 @@
             android:padding="5dp"
             android:text="Donors Choose"
             android:textColor="#228CAA"
-            android:textSize="28sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             android:typeface="sans" />
 
         <ImageButton
             android:id="@+id/imageButton2"
-            android:layout_width="55dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:foreground="@drawable/ic_launcher_foreground"
+            android:onClick="goHome"
+            android:src="@drawable/home_icon"
+            tools:background="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="7dp"
+            android:layout_weight="1"
             android:onClick="loadUser"
-            tools:background="#1A0F0F0F" />
+            android:src="@drawable/profile_icon"
+            tools:background="#FFFFFF" />
 
         <ImageButton
             android:id="@+id/imageButton"
             style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="55dp"
-            android:layout_height="match_parent"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="center|center_vertical"
             android:layout_weight="1"
-            android:background="#6BD2EDF1"
+            android:background="#FFFFFF"
             android:onClick="logout"
             android:tint="#101010"
             app:srcCompat="@android:drawable/ic_lock_power_off" />
