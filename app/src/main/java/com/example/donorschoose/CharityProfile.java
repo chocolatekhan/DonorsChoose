@@ -115,6 +115,12 @@ public class CharityProfile extends AppCompatActivity {
         makeEditable();
     }
 
-    public void donate() { startActivity(new Intent(getApplicationContext(), Donate.class)); }
+    public void donate()
+    {
+        Intent donatePage = new Intent(this, Donate.class);
+        donatePage.putExtra("Charity ID", charityDocument.getId());
+        donatePage.putExtra("Charity Name", charityDocument.get("name").toString());
+        startActivity(donatePage);
+    }
 
 }

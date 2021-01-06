@@ -27,23 +27,21 @@ public class SSLCommerz implements SSLCTransactionResponseListener {
 
 
         IntegrateSSLCommerz.getInstance(mainContext).addSSLCommerzInitialization(sslCommerzInitialization).buildApiCall(this);
-
     }
 
     @Override
     public void transactionSuccess(SSLCTransactionInfoModel sslcTransactionInfoModel) {
-        Toast.makeText(mainContext, "Success", Toast.LENGTH_SHORT).show();
+       Donate.successfulTransaction(sslcTransactionInfoModel.getAmount());
     }
 
     @Override
     public void transactionFail(String s) {
-        Toast.makeText(mainContext, "Failure", Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(mainContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
+        Donate.failedTransaction();
     }
 
     @Override
     public void merchantValidationError(String s) {
         Toast.makeText(mainContext, "Error", Toast.LENGTH_SHORT).show();
-
     }
 }
