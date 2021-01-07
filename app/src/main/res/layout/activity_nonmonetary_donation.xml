@@ -41,6 +41,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_action_name"
+            android:onClick="goHome"
             tools:background="#FFFFFF" />
 
         <ImageButton

@@ -41,6 +41,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_action_name"
+            android:onClick="goHome"
             tools:background="#FFFFFF" />
 
         <ImageButton
@@ -70,9 +71,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="30dp"
         android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tableRow">
 

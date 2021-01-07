@@ -54,7 +54,7 @@ public class Registration extends AppCompatActivity
                         public void onSuccess(Void aVoid) { goHome(); }
                     });
                 }
-                else    Toast.makeText(Registration.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                else    Toast.makeText(Registration.this, "Failed to register.", Toast.LENGTH_SHORT).show();
             }
         });
     }
