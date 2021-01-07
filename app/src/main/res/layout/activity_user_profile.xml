@@ -40,7 +40,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:src="@drawable/home_icon"
+            android:src="@drawable/ic_action_name"
             tools:background="#FFFFFF" />
 
         <ImageButton
@@ -51,9 +51,9 @@
             android:layout_gravity="center"
             android:layout_marginRight="7dp"
             android:layout_weight="1"
+            android:background="#3669CAED"
             android:onClick="loadUser"
-            android:src="@drawable/profile_icon"
-            tools:background="#FFFFFF" />
+            android:src="@drawable/ic_action_name2" />
 
         <ImageButton
             android:id="@+id/imageButton"
