@@ -12,46 +12,60 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Space
+        <TextView
+            android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3" />
+            android:layout_weight="1"
+            android:fontFamily="@font/coda"
+            android:gravity="bottom|center"
+            android:text="Donors Choose"
+            android:textColor="#228CAA"
+            android:textSize="32sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <EditText
                 android:id="@+id/email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:editable="false"
                 android:ems="10"
                 android:hint="Email"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:ems="10"
                 android:hint="Password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/registerButton"
-                android:layout_width="153dp"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
+                android:fontFamily="@font/salsa"
                 android:onClick="register"
                 android:text="Register"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:backgroundTint="#69CAED" />
 
         </LinearLayout>
 
@@ -66,17 +80,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:text="Already registered?" />
+                android:text="Already have an account?"
+                android:textColor="#0B0A0A"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/loginButton"
-                android:layout_width="153dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/salsa"
                 android:onClick="goLogin"
                 android:text="Login"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:backgroundTint="#69CAED" />
         </LinearLayout>
     </LinearLayout>
 
