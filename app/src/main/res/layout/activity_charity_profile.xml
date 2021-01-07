@@ -70,7 +70,7 @@
     </TableRow>
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/backgroundImage"
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:background="#66D9EE"
@@ -86,7 +86,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/backgroundImage"
         tools:layout_editor_absoluteX="-16dp">
 
         <EditText
