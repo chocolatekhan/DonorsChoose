@@ -33,7 +33,7 @@
             android:typeface="sans" />
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/homeButton"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -45,7 +45,7 @@
             tools:background="#FFFFFF" />
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/profileButton"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="35dp"
             android:layout_height="35dp"

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -81,6 +82,8 @@ public class CharityProfile extends AppCompatActivity {
 
     private void makeEditable()
     {
+        ((ImageButton) findViewById(R.id.homeButton)).setVisibility(View.GONE);
+        ((ImageButton) findViewById(R.id.profileButton)).setVisibility(View.GONE);
         ((Button) findViewById(R.id.donateButton)).setText("Edit");
         buttonFlag = 1;
     }
