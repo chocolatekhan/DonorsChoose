@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,8 +14,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NonMonetaryDonation extends AppCompatActivity {
 
@@ -35,13 +39,30 @@ public class NonMonetaryDonation extends AppCompatActivity {
         getDonationData();
     }
 
+    private void createDoc(String userID)
+    {
+        Map<String, Object> donation = new HashMap<>();
+        donation.put("charity", new ArrayList<String>());
+        donation.put("date", new ArrayList<String>());
+        donation.put("details", new ArrayList<String>());
+
+        FirebaseFirestore.getInstance().collection("donations").document(userID).set(donation);
+    }
+
     private void getDonationData()
     {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore.getInstance().collection("donations").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                addDonationData(userID, (List<String>) documentSnapshot.get("charity"), (List<String>) documentSnapshot.get("date"), (List<String>) documentSnapshot.get("details"));
+
+                if (!documentSnapshot.exists())
+                {
+                    createDoc(userID);
+                    addDonationData(userID, new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
+                }
+                else
+                    addDonationData(userID, (List<String>) documentSnapshot.get("charity"), (List<String>) documentSnapshot.get("date"), (List<String>) documentSnapshot.get("details"));
             }
         });
     }

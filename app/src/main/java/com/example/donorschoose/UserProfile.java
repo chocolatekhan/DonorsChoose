@@ -53,9 +53,12 @@ public class UserProfile extends AppCompatActivity {
         FirebaseFirestore.getInstance().collection("donations").document(userID).addSnapshotListener(UserProfile.this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+
                 ArrayList<String> charities = (ArrayList<String>) documentSnapshot.get("charity");
                 ArrayList<String> dates = (ArrayList<String>) documentSnapshot.get("date");
                 ArrayList<String> details = (ArrayList<String>) documentSnapshot.get("details");
+
+                if (charities == null)  return;
 
                 int donationCount = charities.size();
                 for (int i=0; i<donationCount; i++) addRow(details.get(i), charities.get(i), dates.get(i));
