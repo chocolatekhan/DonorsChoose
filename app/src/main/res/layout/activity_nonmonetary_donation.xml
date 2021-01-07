@@ -4,26 +4,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     tools:context=".NonMonetaryDonation">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="250dp"
+    <TableRow
+        android:id="@+id/tableRow"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Donation Information"
-        android:textColor="#121111"
-        android:textSize="25sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="#FFFFFF"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="20dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="100"
+            android:fontFamily="@font/coda"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="Donors Choose"
+            android:textColor="#228CAA"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@drawable/home_icon"
+            tools:background="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/imageButton6"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="7dp"
+            android:layout_weight="1"
+            android:onClick="loadUser"
+            android:src="@drawable/profile_icon"
+            tools:background="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            style="@style/Widget.AppCompat.ImageButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center|center_vertical"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:onClick="logout"
+            android:tint="#101010"
+            app:srcCompat="@android:drawable/ic_lock_power_off" />
+    </TableRow>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
-        tools:layout_editor_absoluteX="20dp">
+        android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableRow">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,12 +149,16 @@
 
             <Button
                 android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="200dp"
+                android:layout_height="55dp"
                 android:layout_marginTop="28dp"
+                android:fontFamily="@font/salsa"
                 android:onClick="sendData"
-                android:text="Send"
-                android:textColor="#FFFFFF" />
+                android:text="Send to charity"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="#69CAED" />
         </LinearLayout>
     </ScrollView>
 

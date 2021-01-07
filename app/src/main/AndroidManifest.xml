@@ -9,18 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DonorsChoose">
-        <activity android:name=".UserProfile"></activity>
-        <activity android:name=".NonMonetaryDonation" />
-        <activity android:name=".Donate" />
-        <activity android:name=".CharityProfile"></activity>
-        <activity android:name=".Home"></activity>
-        <activity android:name=".Registration" />
-        <activity android:name=".Login">
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".UserProfile" />
+        <activity android:name=".NonMonetaryDonation" />
+        <activity android:name=".Donate" />
+        <activity android:name=".CharityProfile" />
+        <activity android:name=".Home" />
+        <activity android:name=".Registration" />
+        <activity android:name=".Login">
+
         </activity>
 
         <meta-data
