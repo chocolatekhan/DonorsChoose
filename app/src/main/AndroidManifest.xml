@@ -17,7 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".UserProfile" />
-        <activity android:name=".NonMonetaryDonation" />
+        <activity
+            android:windowSoftInputMode="adjustResize"
+            android:name=".NonMonetaryDonation" />
         <activity android:name=".Donate" />
         <activity android:name=".CharityProfile" />
         <activity android:name=".Home" />
