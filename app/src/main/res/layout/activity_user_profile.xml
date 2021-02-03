@@ -5,16 +5,12 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="closeMenu"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
     tools:context=".UserProfile">
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="250dp"
         android:layout_height="match_parent"
-        android:layout_marginRight="-20dp"
         android:padding="10dp"
         android:translationX="1000dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -76,9 +72,12 @@
         android:id="@+id/tableRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:background="#FFFFFF"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="20dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView2"
@@ -110,9 +109,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tableRow">
 
@@ -150,8 +152,7 @@
         android:id="@+id/menuBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="-20dp"
-        android:layout_marginRight="-20dp"
+        android:background="#63BABABA"
         android:onClick="closeMenu"
         android:orientation="horizontal"
         android:visibility="gone"

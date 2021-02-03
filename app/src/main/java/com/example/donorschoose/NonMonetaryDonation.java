@@ -148,8 +148,6 @@ public class NonMonetaryDonation extends AppCompatActivity {
         navigationView.animate().translationX(0);
         LinearLayout menuBackground = findViewById(R.id.menuBackground);
         menuBackground.setVisibility(View.VISIBLE);
-        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
-        constraintLayout.setBackgroundColor(Color.parseColor("#63BABABA"));
     }
 
     public void closeMenu(View view)
@@ -158,7 +156,5 @@ public class NonMonetaryDonation extends AppCompatActivity {
         navigationView.animate().translationX(1000);
         LinearLayout menuBackground = findViewById(R.id.menuBackground);
         menuBackground.setVisibility(View.GONE);
-        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
-        constraintLayout.setBackgroundColor(Color.parseColor("#ffffff"));
     }
 }
