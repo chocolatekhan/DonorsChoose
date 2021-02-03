@@ -79,10 +79,9 @@ public class Home extends AppCompatActivity
     {
         CardView cardView = new CardView(getApplicationContext());
         LinearLayout.LayoutParams cardViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        cardViewLayout.setMargins(10, 10, 10, 10);
+        cardViewLayout.setMargins(10, 50, 10, 50);
         cardView.setLayoutParams(cardViewLayout);
         cardView.setRadius(15);
-        cardView.setContentPadding(0, 300, 0, 0);
         cardView.setMaxCardElevation(30);
         cardView.setMaxCardElevation(6);
         cardView.setCardBackgroundColor(Color.rgb(102, 217, 238));
@@ -118,7 +117,7 @@ public class Home extends AppCompatActivity
         return description;
     }
 
-    private CardView addBackground(CardView cardView, LinearLayout linearLayout, String downloadUrl)
+    private LinearLayout addBackground(LinearLayout linearLayout, String downloadUrl)
     {
         if (!downloadUrl.isEmpty())
         {
@@ -127,10 +126,10 @@ public class Home extends AppCompatActivity
                 @Override
                 public void onSuccess(Uri uri) {
                     Picasso.with(getApplicationContext()).load(uri.toString())
-                            .resize(cardView.getWidth(), linearLayout.getHeight() + 300).into(new Target() {
+                            .resize(linearLayout.getWidth(), linearLayout.getHeight()).into(new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            cardView.setBackground(new BitmapDrawable(getResources(), bitmap));
+                            linearLayout.setBackground(new BitmapDrawable(getResources(), bitmap));
                         }
 
                         @Override
@@ -141,7 +140,7 @@ public class Home extends AppCompatActivity
                     });
             }});
         }
-        return cardView;
+        return linearLayout;
     }
 
     private void addCard(QueryDocumentSnapshot document)
@@ -161,8 +160,9 @@ public class Home extends AppCompatActivity
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.addView(name);
         linearLayout.addView(description);
+        linearLayout.setPadding(0, 300, 0, 0);
+        linearLayout = addBackground(linearLayout, document.getString("background"));
 
-        cardView = addBackground(cardView, linearLayout, document.getString("background"));
         cardView.addView(linearLayout);
         relativeLayout.addView(cardView);
     }
