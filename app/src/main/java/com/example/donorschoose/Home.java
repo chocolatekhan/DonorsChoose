@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Intent;
@@ -33,6 +34,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -297,5 +299,25 @@ public class Home extends AppCompatActivity
         searchBar = (SearchView) findViewById(R.id.searchBar);
         searchBar.setOnQueryTextListener(queryTextListener);
         relativeLayout = (LinearLayout) findViewById(R.id.relativeLayout);
+    }
+
+    public void openMenu(View view)
+    {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.animate().translationX(0);
+        LinearLayout menuBackground = findViewById(R.id.menuBackground);
+        menuBackground.setVisibility(View.VISIBLE);
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout.setBackgroundColor(Color.parseColor("#63BABABA"));
+    }
+
+    public void closeMenu(View view)
+    {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.animate().translationX(1000);
+        LinearLayout menuBackground = findViewById(R.id.menuBackground);
+        menuBackground.setVisibility(View.GONE);
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout.setBackgroundColor(Color.parseColor("#ffffff"));
     }
 }

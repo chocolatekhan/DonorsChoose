@@ -1,14 +1,18 @@
 package com.example.donorschoose;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -136,5 +140,25 @@ public class NonMonetaryDonation extends AppCompatActivity {
         charityProfile.putExtra("Charity ID", charityID);       // send charity details to load to new activity
         charityProfile.putExtra("Access Level", "View");
         startActivity(charityProfile);
+    }
+
+    public void openMenu(View view)
+    {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.animate().translationX(0);
+        LinearLayout menuBackground = findViewById(R.id.menuBackground);
+        menuBackground.setVisibility(View.VISIBLE);
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout.setBackgroundColor(Color.parseColor("#63BABABA"));
+    }
+
+    public void closeMenu(View view)
+    {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.animate().translationX(1000);
+        LinearLayout menuBackground = findViewById(R.id.menuBackground);
+        menuBackground.setVisibility(View.GONE);
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout.setBackgroundColor(Color.parseColor("#ffffff"));
     }
 }

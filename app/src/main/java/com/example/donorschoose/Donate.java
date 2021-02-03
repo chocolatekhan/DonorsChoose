@@ -2,18 +2,22 @@ package com.example.donorschoose;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -156,5 +160,25 @@ public class Donate extends AppCompatActivity {
         donation.put("details", new ArrayList<String>());
 
         FirebaseFirestore.getInstance().collection("donations").document(userID).set(donation); // adding document to firebase
+    }
+
+    public void openMenu(View view)
+    {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.animate().translationX(0);
+        LinearLayout menuBackground = findViewById(R.id.menuBackground);
+        menuBackground.setVisibility(View.VISIBLE);
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout.setBackgroundColor(Color.parseColor("#63BABABA"));
+    }
+
+    public void closeMenu(View view)
+    {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.animate().translationX(1000);
+        LinearLayout menuBackground = findViewById(R.id.menuBackground);
+        menuBackground.setVisibility(View.GONE);
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout.setBackgroundColor(Color.parseColor("#ffffff"));
     }
 }

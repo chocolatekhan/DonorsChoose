@@ -3,9 +3,11 @@ package com.example.donorschoose;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,11 +16,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -254,6 +258,26 @@ public class CharityProfile extends AppCompatActivity {
         donatePage.putExtra("Charity ID", charityDocument.getId());     // sending charity ID and name to new page; needed there
         donatePage.putExtra("Charity Name", charityDocument.get("name").toString());
         startActivity(donatePage);
+    }
+
+    public void openMenu(View view)
+    {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.animate().translationX(0);
+        LinearLayout menuBackground = findViewById(R.id.menuBackground);
+        menuBackground.setVisibility(View.VISIBLE);
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout.setBackgroundColor(Color.parseColor("#63BABABA"));
+    }
+
+    public void closeMenu(View view)
+    {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.animate().translationX(1000);
+        LinearLayout menuBackground = findViewById(R.id.menuBackground);
+        menuBackground.setVisibility(View.GONE);
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout.setBackgroundColor(Color.parseColor("#ffffff"));
     }
 
 }
