@@ -127,8 +127,8 @@ public class CharityProfile extends AppCompatActivity {
      */
     private void makeEditable()
     {
-        ((ImageButton) findViewById(R.id.homeButton)).setVisibility(View.GONE);     // hiding homepage and profile page icons from menu bar; Edit access users cannot use these
-        ((ImageButton) findViewById(R.id.profileButton)).setVisibility(View.GONE);
+        ((Button) findViewById(R.id.homeButton)).setVisibility(View.GONE);     // hiding homepage and profile page icons from menu bar; Edit access users cannot use these
+        ((Button) findViewById(R.id.profileButton)).setVisibility(View.GONE);
         ((Button) findViewById(R.id.donateButton)).setText("Edit");                 // changing donate button to edit button
         buttonFlag = 1;                                                             // not actively editing but has edit access
         backgroundImage = (ImageView) findViewById(R.id.backgroundImage);           // setting imageView globally since needed elsewhere
