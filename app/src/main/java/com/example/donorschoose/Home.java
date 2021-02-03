@@ -28,6 +28,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -171,7 +172,9 @@ public class Home extends AppCompatActivity
         @Override
         public boolean onQueryTextSubmit(String input) {
 
-            relativeLayout.removeAllViews();
+            FlexboxLayout flexboxLayout = findViewById(R.id.categoryHints);
+            if (flexboxLayout.getVisibility() == View.VISIBLE)  flexboxLayout.setVisibility(View.GONE);
+            relativeLayout.removeViews(1, relativeLayout.getChildCount() - 1);
 
             final int[] resultFlag = {2};
             CollectionReference charities = db.collection("charities");
@@ -211,13 +214,29 @@ public class Home extends AppCompatActivity
         }
 
         @Override
-        public boolean onQueryTextChange(String newText) { return false; }
+        public boolean onQueryTextChange(String newText) {
+
+            if (newText.isEmpty())
+            {
+                relativeLayout.removeViews(1, relativeLayout.getChildCount() - 1);
+                FlexboxLayout flexboxLayout = findViewById(R.id.categoryHints);
+                flexboxLayout.setVisibility(View.VISIBLE);
+            }
+            return false;
+        }
     };
 
     public void logout(View view)
     {
         FirebaseAuth.getInstance().signOut();
         startActivity((new Intent(this, Login.class)).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
+
+    public void suggestedQuery(View view)
+    {
+        CardView cardView = (CardView) view;
+        CharSequence query = ((TextView) ((LinearLayout) cardView.getChildAt(0)).getChildAt(1)).getText();
+        searchBar.setQuery(query, true);
     }
 
     @Override
