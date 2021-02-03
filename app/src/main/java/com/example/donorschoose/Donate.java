@@ -162,19 +162,27 @@ public class Donate extends AppCompatActivity {
         FirebaseFirestore.getInstance().collection("donations").document(userID).set(donation); // adding document to firebase
     }
 
+    /**
+     * opens navigation menu
+     * @param view is the view calling the method using it's onClick method
+     */
     public void openMenu(View view)
     {
         NavigationView navigationView = findViewById(R.id.navigationView);
-        navigationView.animate().translationX(0);
+        navigationView.animate().translationX(0);   // bring navigation menu into view
         LinearLayout menuBackground = findViewById(R.id.menuBackground);
-        menuBackground.setVisibility(View.VISIBLE);
+        menuBackground.setVisibility(View.VISIBLE); // bring background into view
     }
 
+    /**
+     * closes navigation menu
+     * @param view is the view calling the method using it's onClick method
+     */
     public void closeMenu(View view)
     {
         NavigationView navigationView = findViewById(R.id.navigationView);
-        navigationView.animate().translationX(1000);
+        navigationView.animate().translationX(1000);    // hide navigation menu
         LinearLayout menuBackground = findViewById(R.id.menuBackground);
-        menuBackground.setVisibility(View.GONE);
+        menuBackground.setVisibility(View.GONE);        // hide background
     }
 }
