@@ -249,7 +249,8 @@ public class CharityProfile extends AppCompatActivity {
                 if (task.isSuccessful())
                     if (!task.getResult().isEmpty())
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            addCard(document);           // add new card for each result
+                            if (!document.getId().equals("blank"))  // for every document other than the default blank one needed to create the collection
+                                addCard(document);           // add new card for each result
                         }
                     else    Toast.makeText(CharityProfile.this, "Error", Toast.LENGTH_SHORT).show();
             }
