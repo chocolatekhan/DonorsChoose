@@ -252,7 +252,7 @@ public class CharityProfile extends AppCompatActivity {
                             if (!document.getId().equals("blank"))  // for every document other than the default blank one needed to create the collection
                                 addCard(document);           // add new card for each result
                         }
-                    else    Toast.makeText(CharityProfile.this, "Error", Toast.LENGTH_SHORT).show();
+                    else    Toast.makeText(CharityProfile.this, "Unable to retrieve activities", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -328,14 +328,14 @@ public class CharityProfile extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null ) // if successfully retrieved image
         {
-            filePath = data.getData();  // get image's file path; set gloablly since used elsewhere
+            filePath = data.getData();  // get image's file path; set globally since used elsewhere
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath); // set image to charity profile background
                 backgroundImage.setImageBitmap(bitmap);
             }
             catch (IOException e)
             {
-                e.printStackTrace();
+                Toast.makeText(CharityProfile.this, "Invalid file", Toast.LENGTH_SHORT).show();
             }
         }
     }

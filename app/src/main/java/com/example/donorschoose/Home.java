@@ -230,7 +230,7 @@ public class Home extends AppCompatActivity
                             for (QueryDocumentSnapshot document : task.getResult())
                                 addCard(document);                                                  // add new card for each result
                         else    resultFlag[0]--;    // no results from amongst charity names
-                    else    Toast.makeText(Home.this, "Error", Toast.LENGTH_SHORT).show();
+                    else    Toast.makeText(Home.this, "Error retrieving results", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -245,7 +245,7 @@ public class Home extends AppCompatActivity
                             for (QueryDocumentSnapshot document : task.getResult())
                                 addCard(document);                                                  // add new card for each result
                         else    resultFlag[0]--;    // no results from amongst tags
-                    else    Toast.makeText(Home.this, "Error", Toast.LENGTH_SHORT).show();
+                    else    Toast.makeText(Home.this, "Error retrieving results", Toast.LENGTH_SHORT).show();
                 }
             });
 

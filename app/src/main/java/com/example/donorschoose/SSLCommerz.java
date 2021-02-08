@@ -50,6 +50,6 @@ public class SSLCommerz implements SSLCTransactionResponseListener {
 
     @Override
     public void merchantValidationError(String s) {
-        Toast.makeText(mainContext, "Error", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mainContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
     }
 }
