@@ -64,14 +64,29 @@ public class NonMonetaryDonation extends AppCompatActivity {
     }
 
     /**
-     * form submission
+     * sends non-monetary donation data to chosen charity
      * @param view is the view calling the method using it's onClick method
      */
     public void sendData(View view)
     {
+        String name = ((TextView) findViewById(R.id.donorName)).getText().toString();
+        String email = ((TextView) findViewById(R.id.donorEmail)).getText().toString();
+        String phNum = ((TextView) findViewById(R.id.donorPhone)).getText().toString();
+        String pickUp = ((TextView) findViewById(R.id.pickUpAddress)).getText().toString();
+        String donation = ((TextView) findViewById(R.id.donationData)).getText().toString();
+
+        String recipient = "donorschoosebd@gmail.com";      // TODO replace with charity email
+        String subject = "You have a new donation!";
+        String message = "Hello!\n\nYou have received a new donation on your Donors Choose profile. Here is the donor's information:\n\n" +
+                "Name: " + name + "\nEmail: " + email + "\nPhone Number: " + phNum + "\nPick Up Location: " + pickUp + "\nDonation Details: " + donation +
+                "\n\n Please contact the donor and arrange to meet at the specified location at a time that is convenient to both parties.\n\n" +
+                "Regards,\nThe Donors Choose Team";
+
+        JavaMailAPI javaMailAPI = new JavaMailAPI(recipient, subject, message);   // create email
+        javaMailAPI.execute();  // send email
+
+
         getDonationData();  // stores donation details in user donation history
-        // this function is also meant to hold more code to email the submitted form to the respective charity
-        // this feature is unimplemented as of now
     }
 
     /**

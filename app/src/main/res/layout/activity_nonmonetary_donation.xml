@@ -132,7 +132,7 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/donorName"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -142,7 +142,7 @@
                 android:textColor="#000000" />
 
             <EditText
-                android:id="@+id/editTextTextEmailAddress"
+                android:id="@+id/donorEmail"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -152,7 +152,7 @@
                 android:textColor="#000000" />
 
             <EditText
-                android:id="@+id/editTextPhone"
+                android:id="@+id/donorPhone"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -162,7 +162,7 @@
                 android:textColor="#000000" />
 
             <EditText
-                android:id="@+id/editTextTextPostalAddress"
+                android:id="@+id/pickUpAddress"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
