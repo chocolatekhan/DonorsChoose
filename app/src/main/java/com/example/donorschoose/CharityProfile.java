@@ -249,8 +249,7 @@ public class CharityProfile extends AppCompatActivity {
                 if (task.isSuccessful())
                     if (!task.getResult().isEmpty())
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            for (int i = 0; i < 10; i++)
-                                addCard(document);           // add new card for each result
+                            addCard(document);           // add new card for each result
                         }
                     else    Toast.makeText(CharityProfile.this, "Error", Toast.LENGTH_SHORT).show();
             }
