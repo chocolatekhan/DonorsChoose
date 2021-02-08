@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -46,32 +47,56 @@ public class Registration extends AppCompatActivity
      */
     public void register(View view)
     {
-        String email = ((EditText) findViewById(R.id.email)).getText().toString().trim();       // retrieve user authentication details from text fields
-        String password = ((EditText) findViewById(R.id.password)).getText().toString().trim();
+        EditText emailField = findViewById(R.id.email);
+        EditText passwordField = findViewById(R.id.password);
+        String email = emailField.getText().toString().trim();       // user email
+        String password = passwordField.getText().toString().trim(); // user password
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()  // add details to firebase
+        if (email.isEmpty())
         {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task)
+            emailField.setError("Email cannot be empty!");
+            emailField.requestFocus();
+        }
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())  // input does not match pattern for email address
+        {
+            emailField.setError("Please enter a valid email!");
+            emailField.requestFocus();
+        }
+        else if (password.isEmpty())
+        {
+            passwordField.setError("Password cannot be empty!");
+            passwordField.requestFocus();
+        }
+        else if (password.length() < 6)             // requirement from firebase authentication service
+        {
+            passwordField.setError("Password must be at least 6 characters!");
+            passwordField.requestFocus();
+        }
+        else {
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()  // add details to firebase
             {
-                if (task.isSuccessful())                            // registration successful
-                {
-                    String userType = "donor";                      // create a new document in the users collection
-                    Map<String, Object> user = new HashMap<>();
-                    user.put("email", email);
-                    user.put("type", userType);
-
-                    String userID = mAuth.getCurrentUser().getUid();
-                    DocumentReference documentReference = db.collection("users").document(userID);
-                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>()
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful())                            // registration successful
                     {
-                        @Override
-                        public void onSuccess(Void aVoid) { goHome(); } // go to home page
-                    });
+                        String userType = "donor";                      // create a new document in the users collection
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("email", email);
+                        user.put("type", userType);
+
+                        String userID = mAuth.getCurrentUser().getUid();
+                        DocumentReference documentReference = db.collection("users").document(userID);
+                        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                goHome();
+                            } // go to home page
+                        });
+                    } else
+                        Toast.makeText(Registration.this, "Failed to register.", Toast.LENGTH_SHORT).show();
                 }
-                else    Toast.makeText(Registration.this, "Failed to register.", Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+        }
     }
 
     @Override

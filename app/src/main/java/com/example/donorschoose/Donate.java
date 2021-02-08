@@ -92,10 +92,20 @@ public class Donate extends AppCompatActivity {
      */
     public void donate(View view)
     {
-        int donationAmount = Integer.parseInt(((EditText) findViewById(R.id.donationAmount)).getText().toString()); // amount to donate
-        SSLCommerz donation = new SSLCommerz();                         // creating object for portal
-        donation.makePayment(Donate.this, donationAmount);      // use portal's method to start donation process
-        goCharity();                                                    // return to charity profile page
+        EditText donationField = findViewById(R.id.donationAmount);
+        String donationAmount = donationField.getText().toString();        // amount to donate
+
+        if (donationAmount.isEmpty())
+        {
+            donationField.setError("Please enter an amount!");
+            donationField.requestFocus();
+        }
+        else
+        {
+            SSLCommerz donation = new SSLCommerz();                         // creating object for portal
+            donation.makePayment(Donate.this, Integer.parseInt(donationAmount));      // use portal's method to start donation process
+            goCharity();                                                    // return to charity profile page
+        }
     }
 
     public void goCharity()

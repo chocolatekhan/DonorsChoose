@@ -1,5 +1,6 @@
 package com.example.donorschoose;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -7,11 +8,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,6 +28,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Controller class for non-monetary donation page XML
@@ -61,6 +67,13 @@ public class NonMonetaryDonation extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();                // retreive charity details passed by previous activity and store in global variables
         charityID = extras.getString("Charity ID");
         charityName = extras.getString("Charity Name");
+
+        // retrieve user email from database and set in email field
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance().collection("users").document(uid).get().addOnCompleteListener(task -> {
+            String userEmail = task.getResult().get("email").toString();
+            ((EditText) findViewById(R.id.donorEmail)).setText(userEmail);
+        });
     }
 
     /**
@@ -69,24 +82,52 @@ public class NonMonetaryDonation extends AppCompatActivity {
      */
     public void sendData(View view)
     {
-        String name = ((TextView) findViewById(R.id.donorName)).getText().toString();
-        String email = ((TextView) findViewById(R.id.donorEmail)).getText().toString();
-        String phNum = ((TextView) findViewById(R.id.donorPhone)).getText().toString();
-        String pickUp = ((TextView) findViewById(R.id.pickUpAddress)).getText().toString();
-        String donation = ((TextView) findViewById(R.id.donationData)).getText().toString();
+        TextView nameField = findViewById(R.id.donorName);
+        TextView emailField = findViewById(R.id.donorEmail);
+        TextView numberField = findViewById(R.id.donorPhone);
+        TextView locationField = findViewById(R.id.pickUpAddress);
+        TextView donationField = findViewById(R.id.donationData);
 
-        String recipient = "donorschoosebd@gmail.com";      // TODO replace with charity email
-        String subject = "You have a new donation!";
-        String message = "Hello!\n\nYou have received a new donation on your Donors Choose profile. Here is the donor's information:\n\n" +
-                "Name: " + name + "\nEmail: " + email + "\nPhone Number: " + phNum + "\nPick Up Location: " + pickUp + "\nDonation Details: " + donation +
-                "\n\n Please contact the donor and arrange to meet at the specified location at a time that is convenient to both parties.\n\n" +
-                "Regards,\nThe Donors Choose Team";
+        String name = nameField.getText().toString();
+        String email = emailField.getText().toString();
+        String phNum = numberField.getText().toString();
+        String pickUp = locationField.getText().toString();
+        String donation = donationField.getText().toString();
 
-        JavaMailAPI javaMailAPI = new JavaMailAPI(recipient, subject, message);   // create email
-        javaMailAPI.execute();  // send email
+        if (name.isEmpty())                                             // allowing phone number to remain blank (privacy)
+        {                                                               // allowing pick up location to remain empty (may be unknown)
+            nameField.setError("Please enter your name");
+            nameField.requestFocus();
+        }
+        else if (email.isEmpty())
+        {
+            emailField.setError("Please enter your email address");
+            emailField.requestFocus();
+        }
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())      // input does not match pattern for email address
+        {
+            emailField.setError("Please enter a valid email!");
+            emailField.requestFocus();
+        }
+        else if (donation.isEmpty())
+        {
+            donationField.setError("Please enter donation category");
+            donationField.requestFocus();
+        }
+        else
+        {
+            String recipient = "donorschoosebd@gmail.com";      // TODO replace with charity email
+            String subject = "You have a new donation!";
+            String message = "Hello!\n\nYou have received a new donation on your Donors Choose profile. Here is the donor's information:\n\n" +
+                    "Name: " + name + "\nEmail: " + email + "\nPhone Number: " + phNum + "\nPick Up Location: " + pickUp + "\nDonation Details: " + donation +
+                    "\n\n Please contact the donor and arrange to meet at the specified location at a time that is convenient to both parties.\n\n" +
+                    "Regards,\nThe Donors Choose Team";
 
+            JavaMailAPI javaMailAPI = new JavaMailAPI(recipient, subject, message);   // create email
+            javaMailAPI.execute();  // send email
 
-        getDonationData();  // stores donation details in user donation history
+            getDonationData();  // stores donation details in user donation history
+        }
     }
 
     /**

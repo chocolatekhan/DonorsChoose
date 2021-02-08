@@ -345,21 +345,34 @@ public class CharityProfile extends AppCompatActivity {
      */
     private void saveProfile()
     {
-        TextView name = ((TextView) findViewById(R.id.nameTextView));
-        TextView description = ((TextView) findViewById(R.id.descriptionTextView));
+        TextView name = findViewById(R.id.nameTextView);
+        TextView description = findViewById(R.id.descriptionTextView);
 
-        name.setEnabled(false);             // name and description fields are not uneditable
-        description.setEnabled(false);
-        name.setBackgroundResource(android.R.color.white);
-        description.setBackgroundResource(android.R.color.white);
+        if (name.getText().toString().isEmpty())
+        {
+            name.setError("Please enter a name");
+            name.requestFocus();
+        }
+        else if (description.getText().toString().isEmpty())
+        {
+            description.setError("Please enter a description");
+            description.requestFocus();
+        }
+        else
+        {
+            name.setEnabled(false);             // name and description fields are not uneditable
+            description.setEnabled(false);
+            name.setBackgroundResource(android.R.color.white);
+            description.setBackgroundResource(android.R.color.white);
 
-        backgroundImage.setOnClickListener(null);   // no longer listening for clicks on image
-        updatePicture();                            // upload image to firebase
+            backgroundImage.setOnClickListener(null);   // no longer listening for clicks on image
+            updatePicture();                            // upload image to firebase
 
-        charityDocument.getReference().update("name", name.getText().toString());       // updating name and description values in firebase
-        charityDocument.getReference().update("description", description.getText().toString());
+            charityDocument.getReference().update("name", name.getText().toString());       // updating name and description values in firebase
+            charityDocument.getReference().update("description", description.getText().toString());
 
-        makeEditable();                             // return to editable (but not actively editing) state
+            makeEditable();                             // return to editable (but not actively editing) state
+        }
     }
 
     /**

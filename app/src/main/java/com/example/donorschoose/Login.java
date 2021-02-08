@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -58,32 +59,52 @@ public class Login extends AppCompatActivity
      */
     public void login(View view)
     {
-        String email = ((EditText) findViewById(R.id.email)).getText().toString().trim();       // user email
-        String password = ((EditText) findViewById(R.id.password)).getText().toString().trim(); // user password
+        EditText emailField = findViewById(R.id.email);
+        EditText passwordField = findViewById(R.id.password);
+        String email = emailField.getText().toString().trim();       // user email
+        String password = passwordField.getText().toString().trim(); // user password
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        if (email.isEmpty())
         {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task)
+            emailField.setError("Email cannot be empty!");
+            emailField.requestFocus();
+        }
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())  // input does not match pattern for email address
+        {
+            emailField.setError("Please enter a valid email!");
+            emailField.requestFocus();
+        }
+        else if (password.isEmpty())
+        {
+            passwordField.setError("Password cannot be empty!");
+            passwordField.requestFocus();
+        }
+        else
+        {
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
             {
-                if (task.isSuccessful())                            // successfully logged in
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task)
                 {
-                    String userID = mAuth.getCurrentUser().getUid();    // get user ID
-                    db.collection("users").document(userID).addSnapshotListener(Login.this, new EventListener<DocumentSnapshot>()
+                    if (task.isSuccessful())                            // successfully logged in
                     {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error)
+                        String userID = mAuth.getCurrentUser().getUid();    // get user ID
+                        db.collection("users").document(userID).addSnapshotListener(Login.this, new EventListener<DocumentSnapshot>()
                         {
-                            String userType = documentSnapshot.getString("type");   // use ID to get user type
-                            if (userType.equals("donor"))           goHome();               // donors go to home page
-                            else if (userType.equals("charity"))    goCharity(documentSnapshot.getId());    // charities go to their own profiles
-                        }
-                    });
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error)
+                            {
+                                String userType = documentSnapshot.getString("type");   // use ID to get user type
+                                if (userType.equals("donor"))           goHome();               // donors go to home page
+                                else if (userType.equals("charity"))    goCharity(documentSnapshot.getId());    // charities go to their own profiles
+                            }
+                        });
+                    }
+                    else    Toast.makeText(Login.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                    // invalid login details
                 }
-                else    Toast.makeText(Login.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                // invalid login details
-            }
-        });
+            });
+        }
     }
 
     @Override
