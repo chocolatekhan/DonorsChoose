@@ -3,35 +3,47 @@ package com.example.donorschoose;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.IOException;
 
@@ -93,6 +105,7 @@ public class CharityProfile extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 displayProfile(documentSnapshot);
+                retrieveCharityActivity(charityID);
             }
         });
     }
@@ -121,6 +134,129 @@ public class CharityProfile extends AppCompatActivity {
                 public void onSuccess(Uri uri) { Picasso.with(getApplicationContext()).load(uri.toString()).into(imageView); }});
         }
     }
+
+    private CardView createCard()
+    {
+        int pixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
+        CardView cardView = new CardView(getApplicationContext());
+        LinearLayout.LayoutParams cardViewLayout = new LinearLayout.LayoutParams(pixels, pixels);
+        cardViewLayout.setMargins(10, 10, 10, 10);
+        cardView.setLayoutParams(cardViewLayout);
+        cardView.setRadius(15);
+        cardView.setCardBackgroundColor(Color.rgb(102, 217, 238));  // background in case image fails to load
+        return cardView;
+    }
+
+    /**
+     * Creates text field to hold charity name
+     * @param nameString is the charity name
+     * @return the created text field
+     */
+    private TextView createName(String nameString)
+    {
+        TextView name = new TextView(getApplicationContext());
+        name.setBackgroundColor(Color.BLACK);   // slightly black background to make text visible on top of background image
+        name.getBackground().setAlpha(150);
+        name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        name.setText(nameString);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+        name.setTextColor(Color.WHITE);
+        name.setPadding(20,10,10,10);
+        return name;
+    }
+
+    /**
+     * Creates text field to hold charity description
+     * @param descriptionString is the charity description
+     * @return the created text field
+     */
+    private TextView createDescription(String descriptionString)
+    {
+        TextView description = new TextView(getApplicationContext());
+        description.setBackgroundColor(Color.BLACK);    // slightly black background to make text visible on top of background image
+        description.getBackground().setAlpha(150);
+        description.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        description.setText(descriptionString);
+        description.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        description.setTextColor(Color.WHITE);
+        description.setPadding(20,10,10,10);
+        return description;
+    }
+
+    /**
+     * Adds background image to inner layout holding content of card
+     * @param linearLayout  is the inner layout
+     * @param downloadUrl   is the URL for the background image
+     * @return the edited inner layout
+     */
+    private LinearLayout addBackground(LinearLayout linearLayout, String downloadUrl)
+    {
+        if (!downloadUrl.isEmpty()) // if URL is empty, background image cannot be loaded
+        {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(downloadUrl); // retrieve reference to image from firebase
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(getApplicationContext()).load(uri.toString())
+                            .resize(linearLayout.getWidth(), linearLayout.getHeight()).into(new Target() {  // set image to appropriate size
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            linearLayout.setBackground(new BitmapDrawable(getResources(), bitmap));         // set image as inner layout background
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {}
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                    });
+                }});
+        }
+        return linearLayout;
+    }
+
+    /**
+     * Start making a card for each result and add all inner details
+     * @param document holds the details of the result
+     */
+    private void addCard(QueryDocumentSnapshot document)
+    {
+        CardView cardView = createCard();   // create outer structure for new card
+        TextView name = createName(document.getString("title"));     // get charity details from document and create text fields
+        TextView description = createDescription(document.getString("description"));
+
+
+        LinearLayout linearLayout = new LinearLayout(getApplicationContext());  // create new inner layout
+        LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        linearLayout.setLayoutParams(linearLayoutParams);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.addView(name);                                             // add charity details to inner layout
+        linearLayout.addView(description);
+        linearLayout.setGravity(Gravity.BOTTOM);
+        linearLayout = addBackground(linearLayout, document.getString("image"));   // add background image to inner layout (preserves card corner radius this way)
+
+        cardView.addView(linearLayout);     // add inner layout to card
+        LinearLayout activityList = findViewById(R.id.activityList);
+        activityList.addView(cardView);   // add card to outer layout
+    }
+
+
+    public void retrieveCharityActivity(String charityID)
+    {
+        db.collection("charities").document(charityID).collection("charityActivity").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful())
+                    if (!task.getResult().isEmpty())
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (int i = 0; i < 10; i++)
+                                addCard(document);           // add new card for each result
+                        }
+                    else    Toast.makeText(CharityProfile.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     /**
      * Makes charity profile page editable for users with Edit access

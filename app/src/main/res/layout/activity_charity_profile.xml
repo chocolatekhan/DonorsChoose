@@ -109,64 +109,87 @@
 
     </TableRow>
 
-    <ImageView
-        android:id="@+id/backgroundImage"
+    <ScrollView
+        android:id="@+id/outerScrollView"
         android:layout_width="match_parent"
-        android:layout_height="192dp"
-        android:background="#66D9EE"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/backgroundImage"
-        tools:layout_editor_absoluteX="-16dp">
-
-        <EditText
-            android:id="@+id/nameTextView"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:background="@color/white"
-            android:enabled="false"
-            android:text="charityName"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/descriptionTextView"
-            style="@style/Widget.AppCompat.EditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@color/white"
-            android:enabled="false"
-            android:text="description"
-            android:textColor="@color/black" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/donateButton"
-        android:layout_width="171dp"
-        android:layout_height="59dp"
-        android:fontFamily="@font/salsa"
-        android:onClick="buttonHandler"
-        android:text="Donate"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="#69CAED"
+        android:layout_height="0dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@id/tableRow">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/backgroundImage"
+                android:layout_width="match_parent"
+                android:layout_height="192dp"
+                android:background="#66D9EE"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <EditText
+                    android:id="@+id/nameTextView"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:background="@color/white"
+                    android:enabled="false"
+                    android:text="charityName"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/descriptionTextView"
+                    style="@style/Widget.AppCompat.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/white"
+                    android:enabled="false"
+                    android:text="description"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/activityList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"/>
+            </HorizontalScrollView>
+
+            <Button
+                android:id="@+id/donateButton"
+                android:layout_width="171dp"
+                android:layout_height="59dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="50dp"
+                android:fontFamily="@font/salsa"
+                android:onClick="buttonHandler"
+                android:text="Donate"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:backgroundTint="#69CAED" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/menuBackground"
@@ -181,4 +204,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="5dp"></LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
