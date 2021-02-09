@@ -2,6 +2,7 @@ package com.example.donorschoose;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -9,17 +10,21 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +38,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,6 +52,10 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Controller class for charity profile page XML
@@ -55,9 +65,9 @@ public class CharityProfile extends AppCompatActivity {
     private FirebaseFirestore db;       // firebase database
     private int buttonFlag = 0;         // keeps track of whether page is editable or not
     DocumentSnapshot charityDocument;   // charity profile document from firebase
+    String charityID;                   // id of this charity
 
-    private Uri filePath;               // path to local image chosen as new charity background
-    private final int PICK_IMAGE_REQUEST = 71; // image picker activity request code
+    private Uri backgroundImageFile = null, activityImageFile = null;
     ImageView backgroundImage;          // charity profile background image
 
     /**
@@ -101,6 +111,7 @@ public class CharityProfile extends AppCompatActivity {
      */
     public void retrieveCharityData(String charityID)
     {
+        this.charityID = charityID;
         db.collection("charities").document(charityID).addSnapshotListener(CharityProfile.this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
@@ -217,13 +228,14 @@ public class CharityProfile extends AppCompatActivity {
 
     /**
      * Start making a card for each result and add all inner details
-     * @param document holds the details of the result
+     * @param data holds the details of the result
      */
-    private void addCard(QueryDocumentSnapshot document)
+    private void addCard(Map<String, Object> data)
     {
+        findViewById(R.id.defaultText).setVisibility(View.GONE);
         CardView cardView = createCard();   // create outer structure for new card
-        TextView name = createName(document.getString("title"));     // get charity details from document and create text fields
-        TextView description = createDescription(document.getString("description"));
+        TextView name = createName(data.get("title").toString());     // get charity details from document and create text fields
+        TextView description = createDescription(data.get("description").toString());
 
 
         LinearLayout linearLayout = new LinearLayout(getApplicationContext());  // create new inner layout
@@ -233,7 +245,7 @@ public class CharityProfile extends AppCompatActivity {
         linearLayout.addView(name);                                             // add charity details to inner layout
         linearLayout.addView(description);
         linearLayout.setGravity(Gravity.BOTTOM);
-        linearLayout = addBackground(linearLayout, document.getString("image"));   // add background image to inner layout (preserves card corner radius this way)
+        linearLayout = addBackground(linearLayout, data.get("image").toString());   // add background image to inner layout (preserves card corner radius this way)
 
         cardView.addView(linearLayout);     // add inner layout to card
         LinearLayout activityList = findViewById(R.id.activityList);
@@ -250,7 +262,7 @@ public class CharityProfile extends AppCompatActivity {
                     if (!task.getResult().isEmpty())
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             if (!document.getId().equals("blank"))  // for every document other than the default blank one needed to create the collection
-                                addCard(document);           // add new card for each result
+                                addCard(document.getData());           // add new card for each result
                         }
                     else    Toast.makeText(CharityProfile.this, "Unable to retrieve activities", Toast.LENGTH_SHORT).show();
             }
@@ -301,20 +313,148 @@ public class CharityProfile extends AppCompatActivity {
         backgroundImage.setOnClickListener(new View.OnClickListener() { // listening for clicks on the background image; will open image picker
             @Override
             public void onClick(View v) {
-                imageChange();
+                activityImageFile = null;
+                imageChange(0);
             }
         });
+
+        findViewById(R.id.defaultText).setVisibility(View.GONE);
+        CardView addActivityButton = findViewById(R.id.addActivityButton);
+        addActivityButton.setVisibility(View.VISIBLE);
+    }
+
+    public void createPopupWindow(View view)
+    {
+        activityImageFile = null;
+
+        // Main layout
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setPadding(50, 50, 50, 50);
+
+        // Main text boxes
+        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        textParams.setMargins(0, 0, 0, 20);
+
+        EditText editName = new EditText(this);
+        editName.setHint("New Activity Title");
+        editName.setLayoutParams(textParams);
+
+        EditText editDescription = new EditText(this);
+        editDescription.setHint("New Activity Description");
+        editDescription.setLayoutParams(textParams);
+
+        // Image selection field layout
+        LinearLayout imageSelectLayout = new LinearLayout(this);
+        imageSelectLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        EditText imagePath = new EditText(this);
+        imagePath.setHint("Background image");
+        imagePath.setEnabled(false);
+
+        Button imageSelect = new Button(this);
+        imageSelect.setText("Select");
+        imageSelect.setBackgroundColor(0xFF69CAED);
+        imageSelect.setTextColor(getResources().getColor(R.color.white));
+
+        imageSelectLayout.addView(imageSelect);
+        imageSelectLayout.addView(imagePath);
+
+        // Save button
+        LinearLayout.LayoutParams saveButtonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        saveButtonParams.setMargins(200, 100, 200, 0);
+        Button saveButton = new Button(this);
+        saveButton.setText("Save");
+        saveButton.setHeight(50);
+        saveButton.setBackgroundColor(0xFF69CAED);
+        saveButton.setTextSize(18);
+        saveButton.setTextColor(getResources().getColor(R.color.white));
+        saveButton.setLayoutParams(saveButtonParams);
+
+        linearLayout.addView(editName);
+        linearLayout.addView(editDescription);
+        linearLayout.addView(imageSelectLayout);
+        linearLayout.addView(saveButton);
+
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        scrollView.setVerticalScrollBarEnabled(false);
+        scrollView.addView(linearLayout);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(scrollView);
+        AlertDialog dialog = builder.create();
+        dialog.setTitle("Add New Activity");
+        dialog.show();
+
+        imageSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageChange(1);
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String activityName = editName.getText().toString();
+                String activityDescription = editDescription.getText().toString();
+
+                if (activityName.isEmpty())
+                {
+                    editName.setError("Activity title cannot be empty!");
+                    editName.requestFocus();
+                }
+                else if (activityDescription.isEmpty())
+                {
+                    editDescription.setError("Activity description cannot be empty!");
+                    editDescription.requestFocus();
+                }
+                else
+                {
+                    dialog.dismiss();
+                    addNewActivity(activityName, activityDescription);
+                }
+            }
+        });
+    }
+
+    private void addNewActivity(String name, String description)
+    {
+        String newID = db.collection("charity").document(charityID).collection("charityActivity").document().getId();
+
+        String imageRef = updatePicture(newID);
+
+        Map<String, Object> newActivity = new HashMap<>();
+        newActivity.put("title", name);
+        newActivity.put("description", description);
+        if (imageRef != null)
+            newActivity.put("image", imageRef);
+        else
+            newActivity.put("image", "");
+
+        db.collection("charities").document(charityID).collection("charityActivity").document(newID).set(newActivity)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+                                addCard(newActivity);
+                            }
+                        }, 1000);
+                    }
+                });
     }
 
     /**
      * Opens image picker
      */
-    private void imageChange()
+    private void imageChange(int requestCode)
     {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
     }
 
     /**
@@ -326,17 +466,21 @@ public class CharityProfile extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null ) // if successfully retrieved image
+        if(resultCode == RESULT_OK && data != null && data.getData() != null)  // if successfully retrieved image
         {
-            filePath = data.getData();  // get image's file path; set globally since used elsewhere
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath); // set image to charity profile background
-                backgroundImage.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
+            if (requestCode == 0)
             {
-                Toast.makeText(CharityProfile.this, "Invalid file", Toast.LENGTH_SHORT).show();
+                backgroundImageFile = data.getData();
+                try
+                {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), backgroundImageFile); // set image to charity profile background
+                    backgroundImage.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    Toast.makeText(CharityProfile.this, "Invalid file", Toast.LENGTH_SHORT).show();
+                }
             }
+            else if (requestCode == 1)
+                activityImageFile = data.getData();
         }
     }
 
@@ -345,6 +489,7 @@ public class CharityProfile extends AppCompatActivity {
      */
     private void saveProfile()
     {
+        activityImageFile = null;
         TextView name = findViewById(R.id.nameTextView);
         TextView description = findViewById(R.id.descriptionTextView);
 
@@ -366,10 +511,16 @@ public class CharityProfile extends AppCompatActivity {
             description.setBackgroundResource(android.R.color.white);
 
             backgroundImage.setOnClickListener(null);   // no longer listening for clicks on image
-            updatePicture();                            // upload image to firebase
+            String imageRef = updatePicture(null);                            // upload image to firebase
+            if (imageRef != null)
+                charityDocument.getReference().update("background", imageRef);
 
             charityDocument.getReference().update("name", name.getText().toString());       // updating name and description values in firebase
             charityDocument.getReference().update("description", description.getText().toString());
+
+            findViewById(R.id.addActivityButton).setVisibility(View.GONE);
+            if (((LinearLayout) findViewById(R.id.activityList)).getChildCount() == 1)
+                findViewById(R.id.defaultText).setVisibility(View.VISIBLE);
 
             makeEditable();                             // return to editable (but not actively editing) state
         }
@@ -378,16 +529,34 @@ public class CharityProfile extends AppCompatActivity {
     /**
      * Uploads new background image to firebase
      */
-    private void updatePicture()
+    private String updatePicture(String activityID)
     {
+        StorageReference ref;
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();   // get charity ID
+        Uri filePath = null;
+
+        if (backgroundImageFile != null && activityID == null)
+        {
+            filePath = backgroundImageFile;
+            backgroundImageFile = null;
+        }
+        else if (activityImageFile != null && activityID != null)
+        {
+            filePath = activityImageFile;
+            activityImageFile = null;
+        }
+
         if (filePath != null)   // new image was actually picked
         {
-            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();   // get charity ID
-            StorageReference ref = FirebaseStorage.getInstance().getReference().child("images/" + userID);  // path to storage location
+
+            if (activityID == null)
+                ref = FirebaseStorage.getInstance().getReference().child("images/" + userID);  // path to storage location
+            else
+                ref = FirebaseStorage.getInstance().getReference().child("activityImages/" + userID + "/" + activityID);
+
             ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {   // place image in storage location
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    charityDocument.getReference().update("background", ref.toString());    // if successfully uploaded, change charity's background reference to new image
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -395,7 +564,9 @@ public class CharityProfile extends AppCompatActivity {
                     Toast.makeText(CharityProfile.this, "Failed to save image.", Toast.LENGTH_SHORT).show();
                 }
             });
+            return ref.toString();
         }
+        return null;
     }
 
     /**
