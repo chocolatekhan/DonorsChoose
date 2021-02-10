@@ -6,18 +6,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -52,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -67,8 +71,9 @@ public class CharityProfile extends AppCompatActivity {
     DocumentSnapshot charityDocument;   // charity profile document from firebase
     String charityID;                   // id of this charity
 
-    private Uri backgroundImageFile = null, activityImageFile = null;
+    private Uri backgroundImageFile = null, activityImageFile = null;   // paths to local images for backgrounds
     ImageView backgroundImage;          // charity profile background image
+    TextView activityImageDefaultText;  // new activity image selection view
 
     /**
      * loads user profile page
@@ -129,13 +134,10 @@ public class CharityProfile extends AppCompatActivity {
     {
         charityDocument = document; // setting global variable since also used elsewhere
 
-        TextView nameTextView = (TextView) findViewById(R.id.nameTextView); // charity name
-        TextView descriptionTextView = (TextView) findViewById(R.id.descriptionTextView);   // charity description
+        ((TextView) findViewById(R.id.nameTextView)).setText(charityDocument.getString("name"));    // charity name
+        ((TextView) findViewById(R.id.descriptionTextView)).setText(charityDocument.getString("description"));   // charity description
+
         ImageView imageView = (ImageView) findViewById(R.id.backgroundImage);   // charity background
-
-        nameTextView.setText(charityDocument.getString("name"));
-        descriptionTextView.setText(charityDocument.getString("description"));
-
         String downloadUrl = charityDocument.getString("background");   // downloading background image
         if (!downloadUrl.isEmpty())
         {
@@ -146,11 +148,15 @@ public class CharityProfile extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates outer structure for new card to add charity activities
+     * @return the create card
+     */
     private CardView createCard()
     {
-        int pixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
+        int pixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics()); // dp to px
         CardView cardView = new CardView(getApplicationContext());
-        LinearLayout.LayoutParams cardViewLayout = new LinearLayout.LayoutParams(pixels, pixels);
+        LinearLayout.LayoutParams cardViewLayout = new LinearLayout.LayoutParams(pixels, pixels);   // 200dp x 200dp size
         cardViewLayout.setMargins(10, 10, 10, 10);
         cardView.setLayoutParams(cardViewLayout);
         cardView.setRadius(15);
@@ -159,8 +165,8 @@ public class CharityProfile extends AppCompatActivity {
     }
 
     /**
-     * Creates text field to hold charity name
-     * @param nameString is the charity name
+     * Creates text field to hold charity activity name
+     * @param nameString is the charity activity name
      * @return the created text field
      */
     private TextView createName(String nameString)
@@ -173,12 +179,13 @@ public class CharityProfile extends AppCompatActivity {
         name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         name.setTextColor(Color.WHITE);
         name.setPadding(20,10,10,10);
+        name.setLines(2);                                           // is exactly 2 lines; adds blank line if fewer
         return name;
     }
 
     /**
-     * Creates text field to hold charity description
-     * @param descriptionString is the charity description
+     * Creates text field to hold charity activity description
+     * @param descriptionString is the charity activity description
      * @return the created text field
      */
     private TextView createDescription(String descriptionString)
@@ -191,6 +198,8 @@ public class CharityProfile extends AppCompatActivity {
         description.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         description.setTextColor(Color.WHITE);
         description.setPadding(20,10,10,10);
+        description.setLines(3);                                        // is exactly 3 lines; blank lines added if fewer
+        description.setEllipsize(TextUtils.TruncateAt.END);             // adds ellipses if longer than 3 lines
         return description;
     }
 
@@ -227,22 +236,21 @@ public class CharityProfile extends AppCompatActivity {
     }
 
     /**
-     * Start making a card for each result and add all inner details
-     * @param data holds the details of the result
+     * Start making a card for each charity activity and add all inner details
+     * @param data holds the details of the activity
      */
     private void addCard(Map<String, Object> data)
     {
-        findViewById(R.id.defaultText).setVisibility(View.GONE);
-        CardView cardView = createCard();   // create outer structure for new card
-        TextView name = createName(data.get("title").toString());     // get charity details from document and create text fields
+        findViewById(R.id.defaultText).setVisibility(View.GONE);    // remove the default no activity text field
+        CardView cardView = createCard();                           // create outer structure for new card
+        TextView name = createName(data.get("title").toString());   // get charity activity details from document and create text fields
         TextView description = createDescription(data.get("description").toString());
-
 
         LinearLayout linearLayout = new LinearLayout(getApplicationContext());  // create new inner layout
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         linearLayout.setLayoutParams(linearLayoutParams);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.addView(name);                                             // add charity details to inner layout
+        linearLayout.addView(name);                                             // add charity activity details to inner layout
         linearLayout.addView(description);
         linearLayout.setGravity(Gravity.BOTTOM);
         linearLayout = addBackground(linearLayout, data.get("image").toString());   // add background image to inner layout (preserves card corner radius this way)
@@ -252,7 +260,10 @@ public class CharityProfile extends AppCompatActivity {
         activityList.addView(cardView);   // add card to outer layout
     }
 
-
+    /**
+     * Retrieves all charity activites for given charity.
+     * @param charityID is the id of the current charity
+     */
     public void retrieveCharityActivity(String charityID)
     {
         db.collection("charities").document(charityID).collection("charityActivity").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -262,7 +273,7 @@ public class CharityProfile extends AppCompatActivity {
                     if (!task.getResult().isEmpty())
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             if (!document.getId().equals("blank"))  // for every document other than the default blank one needed to create the collection
-                                addCard(document.getData());           // add new card for each result
+                                addCard(document.getData());        // add new card for each activity
                         }
                     else    Toast.makeText(CharityProfile.this, "Unable to retrieve activities", Toast.LENGTH_SHORT).show();
             }
@@ -275,11 +286,11 @@ public class CharityProfile extends AppCompatActivity {
      */
     private void makeEditable()
     {
-        ((Button) findViewById(R.id.homeButton)).setVisibility(View.GONE);     // hiding homepage and profile page icons from menu bar; Edit access users cannot use these
+        ((Button) findViewById(R.id.homeButton)).setVisibility(View.GONE);      // hiding homepage and profile page icons from menu bar; Edit access users cannot use these
         ((Button) findViewById(R.id.profileButton)).setVisibility(View.GONE);
-        ((Button) findViewById(R.id.donateButton)).setText("Edit");                 // changing donate button to edit button
-        buttonFlag = 1;                                                             // not actively editing but has edit access
-        backgroundImage = (ImageView) findViewById(R.id.backgroundImage);           // setting imageView globally since needed elsewhere
+        ((Button) findViewById(R.id.donateButton)).setText("Edit");             // changing donate button to edit button
+        buttonFlag = 1;                                                         // not actively editing but has edit access
+        backgroundImage = (ImageView) findViewById(R.id.backgroundImage);       // setting imageView globally since needed elsewhere
     }
 
     /**
@@ -313,24 +324,29 @@ public class CharityProfile extends AppCompatActivity {
         backgroundImage.setOnClickListener(new View.OnClickListener() { // listening for clicks on the background image; will open image picker
             @Override
             public void onClick(View v) {
-                activityImageFile = null;
+                activityImageFile = null;       // remove any activity image file; may cause problems if not null
                 imageChange(0);
             }
         });
 
-        findViewById(R.id.defaultText).setVisibility(View.GONE);
-        CardView addActivityButton = findViewById(R.id.addActivityButton);
-        addActivityButton.setVisibility(View.VISIBLE);
+        findViewById(R.id.defaultText).setVisibility(View.GONE);            // remove default no activity text
+        findViewById(R.id.addActivityButton).setVisibility(View.VISIBLE);   // make add new activity button visible
     }
 
+    /**
+     * Creates the dialog to add new activities
+     * @param view is the view calling the method using its onClick method
+     */
     public void createPopupWindow(View view)
     {
-        activityImageFile = null;
+        activityImageFile = null;   // remove any pre-existing activity image file
 
         // Main layout
+        LinearLayout.LayoutParams mainLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setPadding(50, 50, 50, 50);
+        linearLayout.setLayoutParams(mainLayoutParams);
 
         // Main text boxes
         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -344,21 +360,23 @@ public class CharityProfile extends AppCompatActivity {
         editDescription.setHint("New Activity Description");
         editDescription.setLayoutParams(textParams);
 
-        // Image selection field layout
+        // Image selection field layout; causes problems with width if removed
         LinearLayout imageSelectLayout = new LinearLayout(this);
         imageSelectLayout.setOrientation(LinearLayout.HORIZONTAL);
+        imageSelectLayout.setGravity(Gravity.CENTER);
 
-        EditText imagePath = new EditText(this);
-        imagePath.setHint("Background image");
-        imagePath.setEnabled(false);
+        // text box to select activity image
+        LinearLayout.LayoutParams imagePrevParams = new LinearLayout.LayoutParams(400, 400);
+        imagePrevParams.setMargins(0, 20, 0, 0);
 
-        Button imageSelect = new Button(this);
-        imageSelect.setText("Select");
-        imageSelect.setBackgroundColor(0xFF69CAED);
-        imageSelect.setTextColor(getResources().getColor(R.color.white));
+        activityImageDefaultText = new TextView(this);
+        activityImageDefaultText.setText("Select\nBackground\nImage");
+        activityImageDefaultText.setBackgroundColor(0xFF69CAED);
+        activityImageDefaultText.setTextColor(getResources().getColor(R.color.white));
+        activityImageDefaultText.setGravity(Gravity.CENTER);
+        activityImageDefaultText.setLayoutParams(imagePrevParams);
 
-        imageSelectLayout.addView(imageSelect);
-        imageSelectLayout.addView(imagePath);
+        imageSelectLayout.addView(activityImageDefaultText);
 
         // Save button
         LinearLayout.LayoutParams saveButtonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -369,31 +387,46 @@ public class CharityProfile extends AppCompatActivity {
         saveButton.setBackgroundColor(0xFF69CAED);
         saveButton.setTextSize(18);
         saveButton.setTextColor(getResources().getColor(R.color.white));
+        saveButton.setTypeface(ResourcesCompat.getFont(this, R.font.salsa));
         saveButton.setLayoutParams(saveButtonParams);
 
+        // adding all the parts to the main layout
         linearLayout.addView(editName);
         linearLayout.addView(editDescription);
         linearLayout.addView(imageSelectLayout);
         linearLayout.addView(saveButton);
 
+        // adding main layout to scrollView just in case
         ScrollView scrollView = new ScrollView(this);
-        scrollView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        scrollView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
         scrollView.setVerticalScrollBarEnabled(false);
         scrollView.addView(linearLayout);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(scrollView);
-        AlertDialog dialog = builder.create();
-        dialog.setTitle("Add New Activity");
-        dialog.show();
+        // Adding scrollView to card to enable corner radius
+        CardView cardView = new CardView(this);
+        cardView.addView(scrollView);
+        cardView.setRadius(20);
 
-        imageSelect.setOnClickListener(new View.OnClickListener() {
+        // Adding card to outer layout to center horizontally
+        LinearLayout outerLayout = new LinearLayout(this);
+        outerLayout.setGravity(Gravity.CENTER);
+        outerLayout.addView(cardView);
+        outerLayout.setPadding(20, 20, 20, 20);
+
+        // creating actual dialog box
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(outerLayout);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); // this allows card radius to become noticeable
+
+        // onClickListener for select activity image 'button'
+        activityImageDefaultText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                imageChange(1);
-            }
+            public void onClick(View view) { imageChange(1); }
         });
 
+        // onClickListener for saving the added activity
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -403,6 +436,11 @@ public class CharityProfile extends AppCompatActivity {
                 if (activityName.isEmpty())
                 {
                     editName.setError("Activity title cannot be empty!");
+                    editName.requestFocus();
+                }
+                else if (activityName.length() > 30)
+                {
+                    editName.setError("Activity name cannot be more than 30 characters long!");
                     editName.requestFocus();
                 }
                 else if (activityDescription.isEmpty())
@@ -419,27 +457,34 @@ public class CharityProfile extends AppCompatActivity {
         });
     }
 
+    /**
+     * Adds a new activity to firebase
+     * @param name is the name of the activity
+     * @param description is the description of the activity
+     */
     private void addNewActivity(String name, String description)
     {
         String newID = db.collection("charity").document(charityID).collection("charityActivity").document().getId();
+        // generates auto ID
 
-        String imageRef = updatePicture(newID);
+        String imageRef = updatePicture(newID); // upload image to firebase storage; get back file reference
 
-        Map<String, Object> newActivity = new HashMap<>();
+        Map<String, Object> newActivity = new HashMap<>();  // create activity document
         newActivity.put("title", name);
         newActivity.put("description", description);
-        if (imageRef != null)
+        if (imageRef != null)       // there was no image
             newActivity.put("image", imageRef);
-        else
+        else                        // there was an image
             newActivity.put("image", "");
 
+        // add document to database
         db.collection("charities").document(charityID).collection("charityActivity").document(newID).set(newActivity)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        new Handler().postDelayed(new Runnable() {
+                    public void onSuccess(Void aVoid) { // once document is successfully added
+                        new Handler().postDelayed(new Runnable() {  // wait 1 second; image does not load otherwise (weird?)
                             public void run() {
-                                addCard(newActivity);
+                                addCard(newActivity);   // add the new activity to the in-app list
                             }
                         }, 1000);
                     }
@@ -459,8 +504,8 @@ public class CharityProfile extends AppCompatActivity {
 
     /**
      * Sets selected local image to charity profile background
-     * @param requestCode verifies that request is valid
-     * @param resultCode verifies that result was succesfful
+     * @param requestCode verifies which function made the request
+     * @param resultCode verifies that result was successful
      * @param data is the image
      */
     @Override
@@ -468,7 +513,7 @@ public class CharityProfile extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK && data != null && data.getData() != null)  // if successfully retrieved image
         {
-            if (requestCode == 0)
+            if (requestCode == 0)   // charity background image being changed
             {
                 backgroundImageFile = data.getData();
                 try
@@ -479,8 +524,20 @@ public class CharityProfile extends AppCompatActivity {
                     Toast.makeText(CharityProfile.this, "Invalid file", Toast.LENGTH_SHORT).show();
                 }
             }
-            else if (requestCode == 1)
+            else if (requestCode == 1)  // new activity image being added
+            {
                 activityImageFile = data.getData();
+                try
+                {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), activityImageFile);
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+                    bitmapDrawable.setGravity(Gravity.CENTER);
+                    activityImageDefaultText.setBackground(bitmapDrawable);
+                    activityImageDefaultText.setText("");
+                } catch (IOException e) {
+                    Toast.makeText(CharityProfile.this, "Invalid file", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
@@ -489,7 +546,7 @@ public class CharityProfile extends AppCompatActivity {
      */
     private void saveProfile()
     {
-        activityImageFile = null;
+        activityImageFile = null;   // may cause problems with charity background image changes otherwise
         TextView name = findViewById(R.id.nameTextView);
         TextView description = findViewById(R.id.descriptionTextView);
 
@@ -510,17 +567,17 @@ public class CharityProfile extends AppCompatActivity {
             name.setBackgroundResource(android.R.color.white);
             description.setBackgroundResource(android.R.color.white);
 
-            backgroundImage.setOnClickListener(null);   // no longer listening for clicks on image
-            String imageRef = updatePicture(null);                            // upload image to firebase
-            if (imageRef != null)
+            backgroundImage.setOnClickListener(null);           // no longer listening for clicks on image
+            String imageRef = updatePicture(null);     // upload image to firebase storage and get reference
+            if (imageRef != null)                               // if there was a change to the background image
                 charityDocument.getReference().update("background", imageRef);
 
             charityDocument.getReference().update("name", name.getText().toString());       // updating name and description values in firebase
             charityDocument.getReference().update("description", description.getText().toString());
 
-            findViewById(R.id.addActivityButton).setVisibility(View.GONE);
-            if (((LinearLayout) findViewById(R.id.activityList)).getChildCount() == 1)
-                findViewById(R.id.defaultText).setVisibility(View.VISIBLE);
+            findViewById(R.id.addActivityButton).setVisibility(View.GONE);  // hide the add activity button
+            if (((LinearLayout) findViewById(R.id.activityList)).getChildCount() == 1)  // if there are still no activities
+                findViewById(R.id.defaultText).setVisibility(View.VISIBLE); // unhide the no activity text
 
             makeEditable();                             // return to editable (but not actively editing) state
         }
@@ -535,36 +592,35 @@ public class CharityProfile extends AppCompatActivity {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();   // get charity ID
         Uri filePath = null;
 
-        if (backgroundImageFile != null && activityID == null)
+        if (backgroundImageFile != null && activityID == null)  // charity background image was changed
         {
             filePath = backgroundImageFile;
-            backgroundImageFile = null;
+            backgroundImageFile = null; // to avoid problems
         }
-        else if (activityImageFile != null && activityID != null)
+        else if (activityImageFile != null && activityID != null)   // new activity image was added
         {
             filePath = activityImageFile;
-            activityImageFile = null;
+            activityImageFile = null;   // to avoid problems
         }
 
         if (filePath != null)   // new image was actually picked
         {
 
-            if (activityID == null)
+            if (activityID == null) // charity background image was changed
                 ref = FirebaseStorage.getInstance().getReference().child("images/" + userID);  // path to storage location
-            else
+            else                    // new activity image was added
                 ref = FirebaseStorage.getInstance().getReference().child("activityImages/" + userID + "/" + activityID);
 
             ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {   // place image in storage location
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                }
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {}
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(CharityProfile.this, "Failed to save image.", Toast.LENGTH_SHORT).show();
                 }
             });
-            return ref.toString();
+            return ref.toString();  // return a reference to the stored image to the calling function
         }
         return null;
     }

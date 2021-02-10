@@ -108,6 +108,9 @@ public class Donate extends AppCompatActivity {
         }
     }
 
+    /**
+     * Loads charity profile after donation is made
+     */
     public void goCharity()
     {
         Intent charityProfile = new Intent(this, CharityProfile.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
