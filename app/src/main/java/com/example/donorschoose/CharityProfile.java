@@ -2,6 +2,7 @@ package com.example.donorschoose;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -17,6 +18,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -28,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -238,13 +241,18 @@ public class CharityProfile extends AppCompatActivity {
     /**
      * Start making a card for each charity activity and add all inner details
      * @param data holds the details of the activity
+     * @param activityID is the ID of the activity being added
      */
-    private void addCard(Map<String, Object> data)
+    private void addCard(Map<String, Object> data, String activityID)
     {
         findViewById(R.id.defaultText).setVisibility(View.GONE);    // remove the default no activity text field
         CardView cardView = createCard();                           // create outer structure for new card
         TextView name = createName(data.get("title").toString());   // get charity activity details from document and create text fields
         TextView description = createDescription(data.get("description").toString());
+
+        TextView activityIDField = new TextView(this);      // creating a hidden text field to hold the ID
+        activityIDField.setText(activityID);                        // to be used in the removal process
+        activityIDField.setVisibility(View.GONE);
 
         LinearLayout linearLayout = new LinearLayout(getApplicationContext());  // create new inner layout
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -256,8 +264,45 @@ public class CharityProfile extends AppCompatActivity {
         linearLayout = addBackground(linearLayout, data.get("image").toString());   // add background image to inner layout (preserves card corner radius this way)
 
         cardView.addView(linearLayout);     // add inner layout to card
-        LinearLayout activityList = findViewById(R.id.activityList);
-        activityList.addView(cardView);   // add card to outer layout
+        cardView.addView(activityIDField);  // add hidden activity ID
+
+        // creating the removal button
+        int crossButtonSize = (int) (30 * this.getResources().getDisplayMetrics().density);
+        LinearLayout.LayoutParams crossButtonParams = new LinearLayout.LayoutParams(crossButtonSize, crossButtonSize);
+        ImageButton crossButton = new ImageButton(this);
+        crossButton.setImageResource(R.drawable.cross_icon);
+        crossButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        crossButton.setBackgroundColor(Color.TRANSPARENT);
+        crossButton.setElevation(10);                   // TODO shows error min android version; will change later
+        if (buttonFlag != 2)    crossButton.setVisibility(View.GONE);   // unless user is currently adding new activities, hide the removal button
+        crossButton.setLayoutParams(crossButtonParams);
+
+        // placing button and card inside frame; TODO have plans to use some animation which would need this
+        FrameLayout frameLayout = new FrameLayout(this);
+        frameLayout.addView(cardView);
+        frameLayout.addView(crossButton);
+
+        ((LinearLayout) findViewById(R.id.activityList)).addView(frameLayout);   // add card to outer layout
+
+        crossButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { removeActivity(crossButton); }
+        });
+    }
+
+    /**
+     * Is used to remove an activity
+     * @param crossButton is the removal button that has been clicked for the corresponding activity
+     */
+    private void removeActivity(ImageButton crossButton)
+    {
+        FrameLayout frameLayout = (FrameLayout) crossButton.getParent();    // get the parent frame
+        String activityID = ((TextView) ((CardView) frameLayout.getChildAt(0)).getChildAt(1)).getText().toString(); // get the hidden activity ID from inside
+        FirebaseFirestore.getInstance().collection("charities").document(charityID)
+                .collection("charityActivity").document(activityID).delete();   // remove activity from firestore
+        StorageReference location = FirebaseStorage.getInstance().getReference().child("activityImages/" + charityID + "/" + activityID);
+        if (location != null)   location.delete();  // remove activity image (if any)
+        ((LinearLayout) findViewById(R.id.activityList)).removeView(frameLayout);
     }
 
     /**
@@ -273,7 +318,7 @@ public class CharityProfile extends AppCompatActivity {
                     if (!task.getResult().isEmpty())
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             if (!document.getId().equals("blank"))  // for every document other than the default blank one needed to create the collection
-                                addCard(document.getData());        // add new card for each activity
+                                addCard(document.getData(), document.getId());        // add new card for each activity
                         }
                     else    Toast.makeText(CharityProfile.this, "Unable to retrieve activities", Toast.LENGTH_SHORT).show();
             }
@@ -331,6 +376,10 @@ public class CharityProfile extends AppCompatActivity {
 
         findViewById(R.id.defaultText).setVisibility(View.GONE);            // remove default no activity text
         findViewById(R.id.addActivityButton).setVisibility(View.VISIBLE);   // make add new activity button visible
+
+        LinearLayout activityList = findViewById(R.id.activityList);        // making all the removal buttons visible
+        for (int i=1; i<activityList.getChildCount(); i++)
+            ((FrameLayout) activityList.getChildAt(i)).getChildAt(1).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -484,7 +533,7 @@ public class CharityProfile extends AppCompatActivity {
                     public void onSuccess(Void aVoid) { // once document is successfully added
                         new Handler().postDelayed(new Runnable() {  // wait 1 second; image does not load otherwise (weird?)
                             public void run() {
-                                addCard(newActivity);   // add the new activity to the in-app list
+                                addCard(newActivity, newID);   // add the new activity to the in-app list
                             }
                         }, 1000);
                     }
@@ -578,6 +627,10 @@ public class CharityProfile extends AppCompatActivity {
             findViewById(R.id.addActivityButton).setVisibility(View.GONE);  // hide the add activity button
             if (((LinearLayout) findViewById(R.id.activityList)).getChildCount() == 1)  // if there are still no activities
                 findViewById(R.id.defaultText).setVisibility(View.VISIBLE); // unhide the no activity text
+
+            LinearLayout activityList = findViewById(R.id.activityList);    // hiding all the removal buttons
+            for (int i=1; i<activityList.getChildCount(); i++)
+                ((FrameLayout) activityList.getChildAt(i)).getChildAt(1).setVisibility(View.GONE);
 
             makeEditable();                             // return to editable (but not actively editing) state
         }
