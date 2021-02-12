@@ -67,6 +67,18 @@
                 android:textStyle="bold"
                 app:backgroundTint="#69CAED" />
 
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:onClick="putSampleDetails"
+                android:padding="5dp"
+                android:text="Click here to try a charity account!"
+                android:textColor="#228CAA"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <LinearLayout

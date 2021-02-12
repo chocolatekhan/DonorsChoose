@@ -10,6 +10,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -105,6 +106,22 @@ public class Login extends AppCompatActivity
                 }
             });
         }
+    }
+
+    /**
+     * Puts sample charity account data into login credentials fields.
+     * @param view is the view calling the method using its onClick method
+     */
+    public void putSampleDetails(View view)
+    {
+        ((TextView) findViewById(R.id.email)).setText("somecharity@gmail.com");
+        // get password from database
+        FirebaseFirestore.getInstance().collection("authCodes").document("sample").addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                ((TextView) findViewById(R.id.password)).setText(documentSnapshot.getString("code"));
+            }
+        });
     }
 
     @Override
